@@ -1,0 +1,1951 @@
+[
+  {
+    "id": "1",
+    "category": "Linux",
+    "title": "Sistema, kernel e arquitetura",
+    "description": "Identificação da distribuição, arquitetura e tempo de atividade.",
+    "code": "cat /etc/os-release\nuname -r\nuname -m\ngetconf LONG_BIT\nuptime",
+    "sources": [
+      "vulnerabilidades.txt",
+      "comandos.txt",
+      "basico.txt",
+      "checklist.txt"
+    ],
+    "note": "Referência das notas enviadas. Substituir parâmetros e confirmar sintaxe e compatibilidade na versão instalada."
+  },
+  {
+    "id": "2",
+    "category": "Linux",
+    "title": "Pacotes e atualizações",
+    "description": "Consulta de pacotes e atualização por distribuição.",
+    "code": "rpm -qa\nyum history\nyum update --advisory=<RHSA-ID>\nsudo apt update\nsudo apt upgrade\ndpkg --list",
+    "sources": [
+      "vulnerabilidades.txt",
+      "comandos2.txt",
+      "upgradeLinux.txt",
+      "basico.txt"
+    ],
+    "note": "As notas incluem RHEL 6. Atualizar pacotes não migra a versão principal. Não usar --skip-broken como comprovação de sucesso."
+  },
+  {
+    "id": "3",
+    "category": "Linux",
+    "title": "Verificação RPM",
+    "description": "Referência histórica à verificação de pacotes.",
+    "code": "rpm -Va --nofiles --nodigest",
+    "sources": [
+      "upgradeLinux.txt",
+      "basico.txt"
+    ],
+    "note": "Essas opções excluem arquivos e checksums; não comprovam integridade completa."
+  },
+  {
+    "id": "4",
+    "category": "Linux",
+    "title": "Swap por processo",
+    "description": "Consulta de Name e VmSwap em /proc, ordenada por consumo.",
+    "code": "for file in /proc/*/status; do\n  awk '/VmSwap|Name/{printf $2 \" \" $3}END{print \"\"}' \"$file\"\ndone | sort -k 2 -n -r",
+    "sources": [
+      "linux.txt"
+    ],
+    "note": "Referência das notas enviadas. Substituir parâmetros e confirmar sintaxe e compatibilidade na versão instalada."
+  },
+  {
+    "id": "5",
+    "category": "Linux",
+    "title": "Serviços com falha",
+    "description": "Consulta de serviços e agentes instalados.",
+    "code": "systemctl list-units --state=failed\nsystemctl status dsmcad\nsystemctl status oneagent\nsystemctl status falcon-sensor",
+    "sources": [
+      "checklist.txt"
+    ],
+    "note": "Referência das notas enviadas. Substituir parâmetros e confirmar sintaxe e compatibilidade na versão instalada."
+  },
+  {
+    "id": "6",
+    "category": "AIX",
+    "title": "Nível do sistema e filesets",
+    "description": "Consulta de versão, bitmode e software instalado.",
+    "code": "oslevel -s\nbootinfo -K\ngetconf KERNEL_BITMODE\nlslpp -L\nlslpp -h bos.mp64",
+    "sources": [
+      "upg",
+      "APARS-VARIADAS.txt",
+      "basico.txt",
+      "checklist.txt"
+    ],
+    "note": "Referência das notas enviadas. Substituir parâmetros e confirmar sintaxe e compatibilidade na versão instalada."
+  },
+  {
+    "id": "7",
+    "category": "AIX",
+    "title": "Preparação de atualização",
+    "description": "Verificações de espaço, erros, software e caminhos de disco.",
+    "code": "lsvg rootvg\ndf -m / /usr /var /tmp /opt\nerrpt\nlppchk -c\nlspath\ninstallp -c all",
+    "sources": [
+      "upg"
+    ],
+    "note": "Dimensionar espaço para a versão alvo. lppchk verifica software, não discos. installp -c altera o estado de filesets."
+  },
+  {
+    "id": "8",
+    "category": "AIX",
+    "title": "Backup mksysb e atualização",
+    "description": "Fluxo genérico: backup, mídia de atualização e validação de nível.",
+    "code": "showmount -e <SERVIDOR_NFS>\nmount <SERVIDOR_NFS>:/<EXPORT> /<MONTAGEM>\nmksysb -iX /<BACKUP>/<HOST>_<DATA>.mksysb\nsmit update_all\noslevel -s",
+    "sources": [
+      "upg"
+    ],
+    "note": "Confirmar backup restaurável e plano de retorno. Servidores e caminhos privados foram removidos."
+  },
+  {
+    "id": "9",
+    "category": "AIX",
+    "title": "Disco alternativo de boot",
+    "description": "Consulta de discos e bootlist; cópia de rootvg para disco alternativo.",
+    "code": "lspv\nbootlist -m normal -o\nalt_disk_copy -d <HDISK_DESTINO>\nalt_rootvg_op -X old_rootvg\nbosboot -ad /dev/ipldevice\nsavebase -v",
+    "sources": [
+      "alternatediskAIX.txt"
+    ],
+    "note": "alt_disk_copy cria cópia, não espelhamento contínuo. Conferir disco destino e retorno antes de remover old_rootvg. As notas não têm rollback completo."
+  },
+  {
+    "id": "10",
+    "category": "AIX",
+    "title": "iFix e emgr",
+    "description": "Consulta, simulação, instalação e remoção de iFix.",
+    "code": "emgr -P\nemgr -e <PACOTE.epkg.Z> -p\nemgr -e <PACOTE.epkg.Z> -X\nemgr -r -L <LABEL>",
+    "sources": [
+      "upg"
+    ],
+    "note": "Selecionar pacote compatível com TL/SP. Instalação e remoção alteram o sistema."
+  },
+  {
+    "id": "11",
+    "category": "AIX",
+    "title": "Serviços SRC",
+    "description": "Consulta e controle de subsistemas AIX.",
+    "code": "lssrc -s sshd\nstartsrc -s sshd\nstopsrc -s sshd\nrefresh -s syslogd\nlssrc -ls xntpd",
+    "sources": [
+      "comandos.txt",
+      "comandos2.txt",
+      "how-to-do-HC.txt"
+    ],
+    "note": "Referência das notas enviadas. Substituir parâmetros e confirmar sintaxe e compatibilidade na versão instalada."
+  },
+  {
+    "id": "12",
+    "category": "Armazenamento",
+    "title": "LVM no AIX",
+    "description": "Consulta de grupos, volumes e discos físicos.",
+    "code": "lsvg\nlsvg -l <VG>\nlsvg -p <VG>\nlspv\nlspv -l <HDISK>",
+    "sources": [
+      "upg",
+      "comandos.txt",
+      "basico.txt"
+    ],
+    "note": "Referência das notas enviadas. Substituir parâmetros e confirmar sintaxe e compatibilidade na versão instalada."
+  },
+  {
+    "id": "13",
+    "category": "Armazenamento",
+    "title": "JFS2: criação e expansão",
+    "description": "Criação, montagem e ampliação de filesystem.",
+    "code": "crfs -v jfs2 -A yes -g <VG> -m /<FILESYSTEM> -a size=<TAMANHO>\nmount /<FILESYSTEM>\nchfs -a size=+<TAMANHO> /<FILESYSTEM>\nchlv -x <MAX_LPS> <LV>",
+    "sources": [
+      "comandos.txt",
+      "basico.txt",
+      "TSM-Commands.txt"
+    ],
+    "note": "Confirmar unidade, PPs livres e limites do volume. Tamanhos e nomes reais removidos."
+  },
+  {
+    "id": "14",
+    "category": "Armazenamento",
+    "title": "LVM e filesystem no Linux",
+    "description": "Consulta de montagens e expansão de filesystem ext.",
+    "code": "vgdisplay\nfindmnt\nlvextend -L +<TAMANHO> /dev/<VG>/<LV>\nresize2fs /dev/<VG>/<LV>",
+    "sources": [
+      "comandos.txt",
+      "basico.txt"
+    ],
+    "note": "resize2fs aplica-se à família ext, não a XFS. Confirmar filesystem antes de ampliar."
+  },
+  {
+    "id": "15",
+    "category": "Armazenamento",
+    "title": "Consumo e ocupação de disco",
+    "description": "Consulta de filesystems com uso elevado e consumo por diretório.",
+    "code": "df -P\ndf -P | awk '0+$5 >= 90 {print}'\ndu -sk *\n# AIX\ndf -g\ndu -sg *",
+    "sources": [
+      "comandos.txt",
+      "basico.txt",
+      "checklist.txt"
+    ],
+    "note": "Referência das notas enviadas. Substituir parâmetros e confirmar sintaxe e compatibilidade na versão instalada."
+  },
+  {
+    "id": "16",
+    "category": "Redes e acesso",
+    "title": "Portas e processos",
+    "description": "Identificação de processo associado a porta.",
+    "code": "lsof -i :<PORTA>\n# AIX\nnetstat -Aan | grep <PORTA>\nps -ef | grep <PROCESSO>",
+    "sources": [
+      "vulnerabilidades.txt",
+      "comandos2.txt",
+      "basico.txt"
+    ],
+    "note": "Ausência de processo não comprova ausência de software nem não aplicabilidade de vulnerabilidade."
+  },
+  {
+    "id": "17",
+    "category": "Redes e acesso",
+    "title": "Transferência por SCP",
+    "description": "Cópia de arquivo para destino remoto.",
+    "code": "scp <ARQUIVO> <USUARIO>@<HOST>:/<DESTINO>",
+    "sources": [
+      "comandos2.txt",
+      "basico.txt"
+    ],
+    "note": "Referência das notas enviadas. Substituir parâmetros e confirmar sintaxe e compatibilidade na versão instalada."
+  },
+  {
+    "id": "18",
+    "category": "Redes e acesso",
+    "title": "SSH e chaves",
+    "description": "Consulta de SSH e configuração de chave.",
+    "code": "service sshd status\nsystemctl status sshd\n# AIX\nlssrc -s sshd\nssh-keygen\nssh-copy-id <USUARIO>@<HOST>",
+    "sources": [
+      "comandos.txt",
+      "comandos2.txt",
+      "ansible-setup-commands.txt",
+      "basico.txt",
+      "how-to-do-HC.txt"
+    ],
+    "note": "As notas citam authorized_keys2, um caminho legado. Conferir AuthorizedKeysFile antes de alterar acesso."
+  },
+  {
+    "id": "19",
+    "category": "Segurança",
+    "title": "Expiração de senha no Linux",
+    "description": "Consulta e ajuste da idade mínima e máxima da senha.",
+    "code": "chage -l <USUARIO>\nchage -M <DIAS_MAX> <USUARIO>\nchage -m <DIAS_MIN> <USUARIO>",
+    "sources": [
+      "comandos.txt",
+      "comandos2.txt",
+      "basico.txt",
+      "how-to-do-HC.txt"
+    ],
+    "note": "Referência das notas enviadas. Substituir parâmetros e confirmar sintaxe e compatibilidade na versão instalada."
+  },
+  {
+    "id": "20",
+    "category": "Segurança",
+    "title": "Desbloqueio de conta AIX",
+    "description": "Consulta de bloqueio e contador de tentativas.",
+    "code": "lsuser -f <USUARIO>\nchuser unsuccessful_login_count=0 <USUARIO>\nchuser account_locked=false <USUARIO>",
+    "sources": [
+      "comandos.txt",
+      "basico.txt"
+    ],
+    "note": "Referência das notas enviadas. Substituir parâmetros e confirmar sintaxe e compatibilidade na versão instalada."
+  },
+  {
+    "id": "21",
+    "category": "Segurança",
+    "title": "Login no Linux: referência legada",
+    "description": "Reset de contador de tentativas com pam_tally2.",
+    "code": "pam_tally2 --user=<USUARIO> --reset",
+    "sources": [
+      "comandos.txt",
+      "basico.txt"
+    ],
+    "note": "Comando legado. Mecanismo de bloqueio depende da distribuição e do PAM; não assumir disponibilidade em RHEL recente."
+  },
+  {
+    "id": "22",
+    "category": "Segurança",
+    "title": "Ownership e permissões",
+    "description": "Consulta e ajuste de acesso a arquivos e diretórios.",
+    "code": "ls -ld /<DIRETORIO>\nchown <USUARIO>:<GRUPO> /<DIRETORIO>\nchmod 750 /<DIRETORIO>\nchmod 600 /<ARQUIVO>",
+    "sources": [
+      "TECHSpec.txt",
+      "comandos.txt",
+      "basico.txt"
+    ],
+    "note": "Evitar a mesma permissão recursiva para arquivos e diretórios. Contas e política corporativa excluídas."
+  },
+  {
+    "id": "23",
+    "category": "Segurança",
+    "title": "Auditoria e syslog",
+    "description": "Consulta da auditoria e do serviço de logs.",
+    "code": "audit query\n# AIX\nps -ef | grep syslogd\ncat /etc/syslog.conf\nrefresh -s syslogd\n# Linux\ncat /etc/rsyslog.conf\nsystemctl status rsyslog",
+    "sources": [
+      "comandos2.txt",
+      "how-to-do-HC.txt",
+      "checklist.txt"
+    ],
+    "note": "Destinos de logs e regras internas removidos. Sintaxe de encaminhamento varia entre implementações."
+  },
+  {
+    "id": "24",
+    "category": "Segurança",
+    "title": "Certificados e Log4j",
+    "description": "Inspeção de certificado e localização de bibliotecas.",
+    "code": "openssl x509 -in <CERTIFICADO> -text -noout\nfind /opt /usr -name 'log4j-core-*.jar' 2>/dev/null",
+    "sources": [
+      "vulnerabilidades.txt",
+      "comandos2.txt"
+    ],
+    "note": "Localizar JAR não determina exposição. Filtro por versão antiga removido porque não comprova segurança atual."
+  },
+  {
+    "id": "25",
+    "category": "Segurança",
+    "title": "NFS e diretórios world-writable",
+    "description": "Consulta de exports e diretórios sem sticky bit.",
+    "code": "showmount -e <SERVIDOR_NFS>\n# AIX\nsmitty chnfsexp\n# Linux: consulta\nfind /<MONTAGEM> -xdev -type d -perm -0002 ! -perm -1000 -print",
+    "sources": [
+      "vulnerabilidades.txt",
+      "comandos2.txt",
+      "how-to-do-HC.txt"
+    ],
+    "note": "Avaliar cada diretório antes de mudar permissões; restringir exports aos clientes autorizados."
+  },
+  {
+    "id": "26",
+    "category": "Segurança",
+    "title": "Core dumps AIX",
+    "description": "Referência à configuração de fullcore.",
+    "code": "lsattr -El sys0 -a fullcore\nchdev -l sys0 -a fullcore=false",
+    "sources": [
+      "comandos2.txt",
+      "how-to-do-HC.txt"
+    ],
+    "note": "Considerar requisitos de diagnóstico antes de mudar configuração."
+  },
+  {
+    "id": "27",
+    "category": "Monitoramento",
+    "title": "Health check consolidado",
+    "description": "Verificação de uptime, espaço, patching, backup e serviços.",
+    "code": "uptime\ndf -P | awk '0+$5 >= 90 {print}'\ndsmc q fi\n# Linux\nuname -r\nyum history\nsystemctl list-units --state=failed\n# AIX\noslevel -s\nlslpp -h bos.mp64",
+    "sources": [
+      "comandos2.txt",
+      "how-to-do-HC.txt",
+      "checklist.txt"
+    ],
+    "note": "MFA, discovery e cluster têm validações próprias. Scripts e critérios corporativos foram excluídos."
+  },
+  {
+    "id": "28",
+    "category": "Monitoramento",
+    "title": "IBM Tivoli Monitoring",
+    "description": "Consulta de componentes e status dos agentes.",
+    "code": "/opt/IBM/ITM/bin/cinfo\n/opt/IBM/ITM/bin/cinfo -r\n/opt/IBM/ITM/bin/cinfo -t\n/opt/IBM/ITM/bin/cinfo -i -z",
+    "sources": [
+      "vulnerabilidades.txt",
+      "APARS-VARIADAS.txt",
+      "comandos2.txt",
+      "how-to-do-HC.txt"
+    ],
+    "note": "Referência das notas enviadas. Substituir parâmetros e confirmar sintaxe e compatibilidade na versão instalada."
+  },
+  {
+    "id": "29",
+    "category": "Monitoramento",
+    "title": "Directory Server e Java",
+    "description": "Consulta de componentes instalados em AIX e Linux.",
+    "code": "lslpp -l 'idsldap*'\nlslpp -L | grep -i java\n# Linux\nrpm -qa | grep idsldap",
+    "sources": [
+      "vulnerabilidades.txt",
+      "APARS-VARIADAS.txt",
+      "comandos2.txt"
+    ],
+    "note": "Referência das notas enviadas. Substituir parâmetros e confirmar sintaxe e compatibilidade na versão instalada."
+  },
+  {
+    "id": "30",
+    "category": "Monitoramento",
+    "title": "TSAMP e RSCT",
+    "description": "Consulta de licença, domínio e RecoveryRM.",
+    "code": "samlicm -s\nlsrpdomain\nlssrc -ls IBM.RecoveryRM",
+    "sources": [
+      "APARS-VARIADAS.txt",
+      "comandos2.txt"
+    ],
+    "note": "Referência das notas enviadas. Substituir parâmetros e confirmar sintaxe e compatibilidade na versão instalada."
+  },
+  {
+    "id": "31",
+    "category": "Monitoramento",
+    "title": "NTP e BigFix",
+    "description": "Consulta de sincronização e processo de gestão.",
+    "code": "ntpq -p\nlssrc -ls xntpd\nps -ef | grep -i besclient",
+    "sources": [
+      "comandos2.txt",
+      "how-to-do-HC.txt"
+    ],
+    "note": "Referência das notas enviadas. Substituir parâmetros e confirmar sintaxe e compatibilidade na versão instalada."
+  },
+  {
+    "id": "32",
+    "category": "Automação",
+    "title": "Ansible: instalação e inventário",
+    "description": "Preparação do inventário e teste de acesso.",
+    "code": "sudo dnf install ansible-core\nansible --version\nansible -i <INVENTARIO> all -u <USUARIO> -k -m command -a \"whoami\"",
+    "sources": [
+      "ansible-setup-commands.txt"
+    ],
+    "note": "Histórico consolidado. Senhas, usuários do laboratório e concessão irrestrita de sudo removidos."
+  },
+  {
+    "id": "33",
+    "category": "Automação",
+    "title": "Ansible: módulos ad hoc",
+    "description": "Uso de command, shell e user.",
+    "code": "ansible -i <INVENTARIO> <GRUPO> -b -K -m user -a \"name=<USUARIO>\"\nansible -i <INVENTARIO> <GRUPO> -m command -a \"uname -r\"\nansible -i <INVENTARIO> <GRUPO> -m shell -a \"ps -ef | grep <PROCESSO>\"",
+    "sources": [
+      "ansible-setup-commands.txt"
+    ],
+    "note": "Preferir command quando não houver recursos de shell. Ajustar autenticação ao ambiente."
+  },
+  {
+    "id": "34",
+    "category": "Automação",
+    "title": "Python no AIX",
+    "description": "Registro de instalação por installp e ajuste de PATH.",
+    "code": "installp -d <IMAGEM_PYTHON> -a all\nexport PATH=\"$PATH:/opt/bin\"\npython3 -V",
+    "sources": [
+      "python.txt"
+    ],
+    "note": "A fonte cita Python 3.7 e pacote antigo. Registro histórico, sem recomendação de versão atual."
+  },
+  {
+    "id": "35",
+    "category": "DB2",
+    "title": "Instalações e instâncias",
+    "description": "Identificação de cópias, edição, instâncias e processos.",
+    "code": "db2ls\ndb2ls -p -q -b <DB2DIR>\n<DB2DIR>/bin/db2ilist\nps -ef | grep db2sysc\ndb2pd -",
+    "sources": [
+      "comandos.txt",
+      "APARS-VARIADAS.txt",
+      "comandos2.txt",
+      "DB2_update_Java.txt",
+      "db2upgrade.txt"
+    ],
+    "note": "Referência das notas enviadas. Substituir parâmetros e confirmar sintaxe e compatibilidade na versão instalada."
+  },
+  {
+    "id": "36",
+    "category": "DB2",
+    "title": "Catálogo e atividade",
+    "description": "Consulta de bancos, nós, conexões e utilitários.",
+    "code": "db2 list db directory\ndb2 list node directory\ndb2 list applications\ndb2 list utilities show detail\ndb2 list tablespaces\ndb2 connect to <BANCO>",
+    "sources": [
+      "comandos.txt",
+      "DB2_update_Java.txt",
+      "db2upgrade.txt"
+    ],
+    "note": "Referência das notas enviadas. Substituir parâmetros e confirmar sintaxe e compatibilidade na versão instalada."
+  },
+  {
+    "id": "37",
+    "category": "DB2",
+    "title": "Configuração e tamanho",
+    "description": "Consulta de configuração, JDK, diagnóstico e tamanho do banco.",
+    "code": "db2 get dbm cfg\ndb2 get dbm cfg | grep JDK_PATH\ndb2 get dbm cfg | grep DIAGPATH\ndb2 get db cfg for <BANCO>\ndb2 \"call get_dbsize_info(?,?,?,-1)\"",
+    "sources": [
+      "comandos.txt",
+      "comandos2.txt",
+      "DB2_update_Java.txt",
+      "db2upgrade.txt"
+    ],
+    "note": "Referência das notas enviadas. Substituir parâmetros e confirmar sintaxe e compatibilidade na versão instalada."
+  },
+  {
+    "id": "38",
+    "category": "DB2",
+    "title": "Diagnóstico e logs",
+    "description": "Consulta do db2diag e filtro de mensagens.",
+    "code": "tail -500 <DIAGPATH>/db2diag.log\ndb2diag -H 10m | grep -i <CODIGO>\ndb2diag -t <TIMESTAMP> -o <ARQUIVO_SAIDA>",
+    "sources": [
+      "comandos.txt"
+    ],
+    "note": "Referência das notas enviadas. Substituir parâmetros e confirmar sintaxe e compatibilidade na versão instalada."
+  },
+  {
+    "id": "39",
+    "category": "DB2",
+    "title": "Backup e recuperação com TSM",
+    "description": "Referências de backup online e rollforward.",
+    "code": "db2 backup db <BANCO> online use tsm include logs\ndb2 rollforward db <BANCO> to end of logs and stop",
+    "sources": [
+      "comandos.txt"
+    ],
+    "note": "Confirmar retenção, logs e restore. Operações alteram banco e backup."
+  },
+  {
+    "id": "40",
+    "category": "DB2",
+    "title": "Integração DB2–TSM",
+    "description": "Consulta de opções, variáveis e arquivos de lock da API.",
+    "code": "env | grep DSMI\ncat \"$DSMI_DIR/dsm.sys\"\nexport DSMI_CONFIG=/<CAMINHO>/dsm_db2.opt\nexport DSMI_DIR=/<CAMINHO_API>\nexport DSMI_LOG=/<DIRETORIO_LOG>\nlsof | grep dsmopt.lock",
+    "sources": [
+      "comandos.txt"
+    ],
+    "note": "Usar caminhos da instalação e permissões da instância. Nomes reais removidos."
+  },
+  {
+    "id": "41",
+    "category": "DB2",
+    "title": "Arquivamento de logs",
+    "description": "Consulta e definição de destino de arquivamento.",
+    "code": "db2 get db cfg for <BANCO> | grep LOGARCH\ndb2 update db cfg for <BANCO> using LOGARCHMETH1 DISK:/<DIRETORIO>\ndb2 update db cfg for <BANCO> using LOGARCHMETH1 TSM:<CLASSE>",
+    "sources": [
+      "comandos.txt"
+    ],
+    "note": "Escolher um destino segundo o plano de recuperação e validar backup após a mudança."
+  },
+  {
+    "id": "42",
+    "category": "DB2",
+    "title": "Java associado ao DB2",
+    "description": "Inventariar cópias e JDK_PATH; salvar configurações; aplicar pacote compatível e retestar.",
+    "code": "db2ls\ndb2 get dbm cfg | grep JDK_PATH\n<JDK_PATH>/bin/java -version\ndb2cfexp <BACKUP_CONFIG> backup\ndb2 list applications\ndb2stop\n# Aplicar pacote compatível com o DB2\ndb2start\ndb2 connect to <BANCO>",
+    "sources": [
+      "DB2_update_Java.txt"
+    ],
+    "note": "Fluxo histórico reescrito. Matrizes antigas de Java, URLs temporárias e regras contratuais internas excluídas. Não substituir JDK apenas por versão mais recente."
+  },
+  {
+    "id": "43",
+    "category": "DB2",
+    "title": "Migração: preparação e backup",
+    "description": "Planejar compatibilidade, LDAP, HADR, replicação, espaço e retorno; validar banco e salvar configurações.",
+    "code": "db2ls\n<DB2DIR>/bin/db2prereqcheck -v <VERSAO>\ndb2 get db cfg for <BANCO> | grep -i HADR\ndb2set -all > <BACKUP_REGISTRO>\ndb2cfexp <BACKUP_CATALOGO> backup\ndb2 get dbm cfg > <BACKUP_DBM>\n<DB2DIR>/bin/db2ckupgrade <BANCO> -l <LOG>\ndb2 backup db <BANCO>",
+    "sources": [
+      "db2upgrade.txt"
+    ],
+    "note": "Documento interno não reproduzido. Conceitos reescritos e comandos genéricos preservados. Exemplo 10.5 → 11.1 é histórico; validar caminho suportado. Figuras citadas não foram anexadas."
+  },
+  {
+    "id": "44",
+    "category": "DB2",
+    "title": "Migração de instância e banco",
+    "description": "Sequência genérica após backup e pré-requisitos: parada, migração, partida e validação.",
+    "code": "db2stop\n<DB2DIR>/instance/db2iupgrade <INSTANCIA>\ndb2start\ndb2 upgrade db <BANCO>\ndb2 connect to <BANCO>",
+    "sources": [
+      "db2upgrade.txt"
+    ],
+    "note": "Planejar retorno pelo backup anterior e validação das aplicações; não é um procedimento completo para toda versão."
+  },
+  {
+    "id": "45",
+    "category": "DB2",
+    "title": "Warehouse e Text Search",
+    "description": "Referências de consulta em OpenShift e Text Search.",
+    "code": "oc get Db2whService <RECURSO> -o jsonpath='{.status.db2whStatus}'\ndb2ts START FOR TEXT STATUS\ndb2ts START FOR TEXT VERIFY",
+    "sources": [
+      "APARS-VARIADAS.txt",
+      "comandos2.txt"
+    ],
+    "note": "Confirmar CRD e sintaxe na versão instalada. Trechos das notas têm contexto incompleto."
+  },
+  {
+    "id": "46",
+    "category": "Backup e TSM",
+    "title": "Cliente, nodes e eventos",
+    "description": "Consulta de filespaces, exclusões, eventos e configurações de servidor.",
+    "code": "dsmc q fi\ndsmc q inclexcl\ndsmadmc\nq ev * * ex=y\nq node <NODE> f=d\nq stg\nq dom\nq mgmt\nq clopt",
+    "sources": [
+      "comandos.txt",
+      "TSM-Commands.txt",
+      "checklist.txt"
+    ],
+    "note": "Referência das notas enviadas. Substituir parâmetros e confirmar sintaxe e compatibilidade na versão instalada."
+  },
+  {
+    "id": "47",
+    "category": "Backup e TSM",
+    "title": "Agendamentos e associações",
+    "description": "Consulta, cópia e associação de agendamento.",
+    "code": "q sched * *\ncopy sched <DOMINIO> <SCHED> <DOMINIO_DESTINO> <SCHED_DESTINO>\ndef assoc <DOMINIO> <SCHED> <NODE>\nq sched * * n=<NODE>",
+    "sources": [
+      "comandos.txt"
+    ],
+    "note": "Nomes e padrões privados de agendas removidos. Mudanças dependem da retenção do ambiente."
+  },
+  {
+    "id": "48",
+    "category": "Backup e TSM",
+    "title": "Ocupação, sessões e volumes",
+    "description": "Consulta de ocupação e sessões; auditoria de volume.",
+    "code": "q auditocc <NODE>\nq occ <NODE>\nq session\naudit vol <VOLUME>\ncancel ses <ID_SESSAO>",
+    "sources": [
+      "comandos.txt"
+    ],
+    "note": "Cancelar sessão interrompe operações; verificar workload primeiro."
+  },
+  {
+    "id": "49",
+    "category": "Backup e TSM",
+    "title": "Consultas SQL de backup",
+    "description": "Consulta de backups e agrupamento de eventos e horários.",
+    "code": "SELECT * FROM backups WHERE node_name='<NODE>'\nSELECT STATUS, COUNT(*) FROM EVENTS\nWHERE scheduled_start >= current_timestamp - 24 hours\nAND NODE_NAME IS NOT NULL GROUP BY STATUS\nSELECT STARTTIME, COUNT(*) FROM CLIENT_SCHEDULES GROUP BY STARTTIME",
+    "sources": [
+      "comandos.txt",
+      "TSM-Commands.txt"
+    ],
+    "note": "Contagens consolidadas. Disponibilidade das tabelas depende da versão do servidor."
+  },
+  {
+    "id": "50",
+    "category": "Backup e TSM",
+    "title": "Administração e autenticação",
+    "description": "Consulta de administradores e parâmetros genéricos de autenticação.",
+    "code": "q system\nselect ADMIN_NAME, PASSEXP from ADMINS\nq admin <ADMIN>\nset authentication ON\nset minpwlength <TAMANHO>\nset invalidpwlimit <LIMITE>\nupd admin <ADMIN> PASSExp=<DIAS>",
+    "sources": [
+      "TECHSpec.txt",
+      "comandos.txt"
+    ],
+    "note": "Contas, contatos, senhas e exigências privadas removidos. Valores são parâmetros, não política recomendada."
+  },
+  {
+    "id": "51",
+    "category": "Backup e TSM",
+    "title": "Configuração e logs do servidor",
+    "description": "Consulta de opções, dispositivos, pools e cron.",
+    "code": "cat /<INSTANCIA>/dsmserv.opt\nq dev f=d\nq stg\ncrontab -l",
+    "sources": [
+      "TECHSpec.txt",
+      "comandos.txt"
+    ],
+    "note": "Avaliar ACTIVELOGDIR, ARCHLOGDirectory, ARCHFAILOVERLOGDIR, volhist e devconfig. Caminhos e scripts privados excluídos."
+  },
+  {
+    "id": "52",
+    "category": "Backup e TSM",
+    "title": "Servidores e recursos de node",
+    "description": "Referências de comunicação e limite de sessões.",
+    "code": "def server <SERVIDOR> hla=<HOST_DESTINO> lla=<PORTA>\nupd node <NODE> MAXNUMMP=<LIMITE>",
+    "sources": [
+      "TSM-Commands.txt"
+    ],
+    "note": "Confirmar autenticação, protocolo e limites. IDs reais removidos."
+  },
+  {
+    "id": "53",
+    "category": "Backup e TSM",
+    "title": "Domino e API",
+    "description": "Consulta de Domino, cliente e códigos de retorno.",
+    "code": "domdsmc query domino\ndomdsmc q adsm\nps -ef | grep dsmc\ncat /usr/tivoli/tsm/client/api/bin64/sample/dsmrc.h",
+    "sources": [
+      "comandos.txt"
+    ],
+    "note": "Senhas em argumentos e receitas de kill/setuid removidas. Erros da API exigem diagnóstico específico."
+  },
+  {
+    "id": "54",
+    "category": "Backup e TSM",
+    "title": "Ciclo de vida de node",
+    "description": "Consultar associações, planejar retenção e bloquear node desativado.",
+    "code": "q node <NODE> f=d\nq sched * * n=<NODE>\nlock node <NODE>",
+    "sources": [
+      "comandos.txt"
+    ],
+    "note": "Fluxo interno de descomissionamento, nomes e prazos fixos excluídos. Remoção de dados requer política de retenção própria."
+  },
+  {
+    "id": "55",
+    "category": "SAP HANA",
+    "title": "Backup: processos e logs",
+    "description": "Consulta de prole e acompanhamento dos logs de backup.",
+    "code": "ps -ef | grep prole\nls /opt/tivoli/tsm/tdp_hana/logs\ntail -f /hana/shared/<SID>/HDB<NUMERO>/<HOST>/trace/<BANCO>/backup.log",
+    "sources": [
+      "troubleshootingSAP.txt"
+    ],
+    "note": "Credenciais, SID, hosts e scripts privados removidos. Reinício e limpeza dependem da instalação e retenção."
+  },
+  {
+    "id": "56",
+    "category": "SAP HANA",
+    "title": "Conexão pelo userstore",
+    "description": "Consulta de chaves e teste de conexão ao banco.",
+    "code": "hdbuserstore list\nhdbsql -d <BANCO> -U <CHAVE> \"select * from dummy\"",
+    "sources": [
+      "troubleshootingSAP.txt"
+    ],
+    "note": "Saída pode revelar destinos e usuários. Chaves reais excluídas."
+  },
+  {
+    "id": "57",
+    "category": "SAP HANA",
+    "title": "Falha de conexão",
+    "description": "Para Connection refused, consultar banco, listener, destino e processo de integração; revisar logs antes de retestar.",
+    "code": "ps -ef | grep prole\n# Ferramenta de configuração citada nas notas\n/opt/tivoli/tsm/tdp_hana/setup.sh",
+    "sources": [
+      "troubleshootingSAP.txt"
+    ],
+    "note": "setup.sh altera configuração. Flags de diagnóstico, kill -9 e comandos de exclusão de logs sem contexto removidos."
+  },
+  {
+    "id": "58",
+    "category": "WebSphere",
+    "title": "Versão e correções",
+    "description": "Consulta da versão e iFixes do Application Server.",
+    "code": "<WAS_HOME>/bin/versionInfo.sh\n<WAS_HOME>/bin/versionInfo.sh -ifixes\nps -ef | grep java",
+    "sources": [
+      "vulnerabilidades.txt",
+      "comandos2.txt",
+      "was.txt"
+    ],
+    "note": "Referência das notas enviadas. Substituir parâmetros e confirmar sintaxe e compatibilidade na versão instalada."
+  },
+  {
+    "id": "59",
+    "category": "WebSphere",
+    "title": "JVM, Node Agent e DMGR",
+    "description": "Referências genéricas de start e stop por perfil.",
+    "code": "<PROFILE>/bin/startManager.sh\n<PROFILE>/bin/stopManager.sh\n<PROFILE>/bin/startNode.sh\n<PROFILE>/bin/stopNode.sh\n<PROFILE>/bin/startServer.sh <SERVIDOR>\n<PROFILE>/bin/stopServer.sh <SERVIDOR>",
+    "sources": [
+      "was.txt",
+      "WASTPStxt.txt"
+    ],
+    "note": "Topologia, contas, credenciais, aplicações e regras de produção/DR removidas. Coordenar dependências antes de executar."
+  },
+  {
+    "id": "60",
+    "category": "WebSphere",
+    "title": "IBM HTTP Server",
+    "description": "Controle do HTTP Server e consulta de processos.",
+    "code": "<IHS_HOME>/bin/apachectl -f <HTTPD_CONF> -k start\n<IHS_HOME>/bin/apachectl -f <HTTPD_CONF> -k stop\nps -ef | grep httpd",
+    "sources": [
+      "WASTPStxt.txt"
+    ],
+    "note": "Referência das notas enviadas. Substituir parâmetros e confirmar sintaxe e compatibilidade na versão instalada."
+  },
+  {
+    "id": "61",
+    "category": "WebSphere",
+    "title": "Installation Manager",
+    "description": "Referência à instalação de correção por repositório.",
+    "code": "<IM_HOME>/eclipse/tools/imcl install <FIX_ID> -repositories <REPOSITORIO> -installationDirectory <WAS_HOME> -acceptLicense -showProgress",
+    "sources": [
+      "was.txt"
+    ],
+    "note": "Fix ID e diretórios privados removidos. Confirmar aplicabilidade e licença."
+  },
+  {
+    "id": "62",
+    "category": "GPFS / Spectrum Scale",
+    "title": "Saúde e inventário de cluster",
+    "description": "Consulta de estados, gerentes, CES e montagens.",
+    "code": "mmgetstate -a -L\nmmlscluster\nmmlscluster --ces\nmmlsmgr\nmmlsnodeclass\nmmces service list -a\nmmces state show NFS -a\nmmhealth cluster show\nmmhealth node show -N all\nmmlsmount all -L -C all\nmmdiag --version",
+    "sources": [
+      "CheckGPFS.txt"
+    ],
+    "note": "Referência das notas enviadas. Substituir parâmetros e confirmar sintaxe e compatibilidade na versão instalada."
+  },
+  {
+    "id": "63",
+    "category": "GPFS / Spectrum Scale",
+    "title": "NSDs, discos e montagens",
+    "description": "Consulta de discos e montagem de filesystem.",
+    "code": "mmlsnsd -L\nmmlsdisk <FILESYSTEM>\nmmmount <FILESYSTEM> -N <NODECLASS>\nmmchdisk <FILESYSTEM> start -a",
+    "sources": [
+      "CheckGPFS.txt"
+    ],
+    "note": "Montagem e mudanças de estado afetam o cluster; confirmar node class e discos."
+  },
+  {
+    "id": "64",
+    "category": "GPFS / Spectrum Scale",
+    "title": "AFM e pagepool",
+    "description": "Consulta de filas AFM e parâmetros de memória.",
+    "code": "mmafmctl <FILESYSTEM> getstate\nmmfsadm dump afm fset <FILESET>\nmmlsconfig pagepool\nmmchconfig pagepool=<TAMANHO> -N <NODE>",
+    "sources": [
+      "CheckGPFS.txt"
+    ],
+    "note": "Dump pode depender de versão. Operações de descarte de mensagens excluídas por falta de contexto."
+  },
+  {
+    "id": "65",
+    "category": "GPFS / Spectrum Scale",
+    "title": "CES e NFS: manutenção",
+    "description": "Referência à suspensão e retomada de serviço.",
+    "code": "mmces node suspend --stop -a\nmmces service stop NFS -a\nmmces node resume --start -a\nmmces service start NFS -a",
+    "sources": [
+      "CheckGPFS.txt"
+    ],
+    "note": "A opção -a afeta todos os nós aplicáveis e pode causar indisponibilidade. Não é sequência universal de recuperação."
+  },
+  {
+    "id": "66",
+    "category": "GPFS / Spectrum Scale",
+    "title": "Diagnóstico e trace",
+    "description": "Coleta de snap, trace e consulta de eventos.",
+    "code": "gpfs.snap -a\nmmtracectl --set --trace=def --tracedev-write-mode=overwrite --tracedev-overwrite-buffer-size=1G -N all\nmmtracectl --start -N all\nmmtracectl --off -N all\nmmhealth event show <EVENTO>",
+    "sources": [
+      "CheckGPFS.txt"
+    ],
+    "note": "Dimensionar espaço e duração. Snap pode conter dados privados; tickets e envio automático excluídos."
+  },
+  {
+    "id": "67",
+    "category": "GPFS / Spectrum Scale",
+    "title": "Contas da GUI",
+    "description": "Criação genérica de conta e mudança de senha.",
+    "code": "/usr/lpp/mmfs/gui/cli/mkuser <USUARIO> -g <GRUPO> -l \"<DESCRICAO>\" -p\n/usr/lpp/mmfs/gui/cli/chuser <USUARIO> -p",
+    "sources": [
+      "gui.txt"
+    ],
+    "note": "Servidores, portal e grupo administrativo original removidos. Conceder apenas o acesso necessário."
+  },
+  {
+    "id": "68",
+    "category": "Virtualização e zLinux",
+    "title": "Inventário zLinux",
+    "description": "Consulta de DASD, VMID e virtualização.",
+    "code": "lsdasd\nvmcp q userid\nvirt-what",
+    "sources": [
+      "zlinux.txt"
+    ],
+    "note": "Mapa VM–LPAR, IDs, login de console e credenciais excluídos."
+  },
+  {
+    "id": "69",
+    "category": "Virtualização e zLinux",
+    "title": "HMC e ESXi",
+    "description": "Referências de console HMC e inventário de rede ESXi.",
+    "code": "# HMC\nvtmenu\n# ESXi\nvim-cmd hostsvc/net/info",
+    "sources": [
+      "comandos.txt",
+      "basico.txt"
+    ],
+    "note": "vcenter.txt excluído integralmente: continha apenas dados privados de acesso e infraestrutura."
+  },
+  {
+    "id": "70",
+    "category": "Catálogo de comandos",
+    "title": "Controle de jobs no shell",
+    "description": "Comandos e descrições do mapa mental Linux, agrupados pelo assunto original.",
+    "code": "jobs\n  List your jobs.\n&\n  Run a job in the background.\n^Z\n  Suspend the current (foreground) job.\nsuspend\n  Suspend a shell.\nfg\n  Unsuspend a job: bring it into the foreground.\nbg\n  Make a suspended job run in the background.",
+    "sources": [
+      "LINUX-Commands.xmind"
+    ],
+    "note": "Catálogo histórico do XMind (2015). Descrições originais, principalmente em inglês; ferramentas e afirmações de segurança podem não se aplicar às versões atuais."
+  },
+  {
+    "id": "71",
+    "category": "Catálogo de comandos",
+    "title": "Operações básicas com arquivos",
+    "description": "Comandos e descrições do mapa mental Linux, agrupados pelo assunto original.",
+    "code": "ls\n  List files in a directory.\ncp\n  Copy a file.\nmv\n  Rename (“move”) a file.\nrm\n  Delete (“remove”) a file.\nln\n  Create links (alternative names) to a file.\nshred\n  Completely erase a file when the file is deleted\n    The operating system does not completely erase a file when the file is deleted.the file could be recovered by third party forensic tools. But we can use the SHRED command to overwrite a file to make it almost impossible for it to be recovered. The file is overwritten three times, by default,which can be changed by the -n option",
+    "sources": [
+      "LINUX-Commands.xmind"
+    ],
+    "note": "Catálogo histórico do XMind (2015). Descrições originais, principalmente em inglês; ferramentas e afirmações de segurança podem não se aplicar às versões atuais."
+  },
+  {
+    "id": "72",
+    "category": "Catálogo de comandos",
+    "title": "Diretórios e caminhos",
+    "description": "Comandos e descrições do mapa mental Linux, agrupados pelo assunto original.",
+    "code": "cd\n  Change your current directory.\npwd\n  Print the name of your current directory, i.e., “where you are now” in the        filesystem.\nbasename\n  Print the final part of a file path.\ndirname\n  Print a file path without its final part.\nmkdir\n  Create (make) a directory.\nrmdir\n  Delete (remove) an empty directory.\nrm -r\n  Delete a nonempty directory and its contents.",
+    "sources": [
+      "LINUX-Commands.xmind"
+    ],
+    "note": "Catálogo histórico do XMind (2015). Descrições originais, principalmente em inglês; ferramentas e afirmações de segurança podem não se aplicar às versões atuais."
+  },
+  {
+    "id": "73",
+    "category": "Catálogo de comandos",
+    "title": "Leitura de arquivos",
+    "description": "Comandos e descrições do mapa mental Linux, agrupados pelo assunto original.",
+    "code": "cat\n  View files in their entirety.\nless\n  View text files one page at a time.\nhead\n  View the first lines of a text file.\ntail\n  View the last lines of a text file.\nnl\n  View text files with their lines numbered.\nstrings\n  Display text that’s embedded in a binary file.\nod\n  View data in octal (or other formats).\nxxd\n  View data in hexadecimal.\nacroread\n  View PDF files.\ngv\n  View PostScript or PDF files.\nxdvi\n  View TeX DVI files.",
+    "sources": [
+      "LINUX-Commands.xmind"
+    ],
+    "note": "Catálogo histórico do XMind (2015). Descrições originais, principalmente em inglês; ferramentas e afirmações de segurança podem não se aplicar às versões atuais."
+  },
+  {
+    "id": "74",
+    "category": "Catálogo de comandos",
+    "title": "Criação e edição de arquivos",
+    "description": "Comandos e descrições do mapa mental Linux, agrupados pelo assunto original.",
+    "code": "emacs\n  Text editor from Free Software Foundation.\nvim\n  Text editor, extension of Unix vi.\nsoffice\n  Office suite for editing Microsoft Word, Excel, and PowerPoint documents.\nabiword\n  Edit Microsoft Word documents.\ngnumeric\n  Edit Excel spreadsheets.",
+    "sources": [
+      "LINUX-Commands.xmind"
+    ],
+    "note": "Catálogo histórico do XMind (2015). Descrições originais, principalmente em inglês; ferramentas e afirmações de segurança podem não se aplicar às versões atuais."
+  },
+  {
+    "id": "75",
+    "category": "Catálogo de comandos",
+    "title": "Propriedades e permissões de arquivos",
+    "description": "Comandos e descrições do mapa mental Linux, agrupados pelo assunto original.",
+    "code": "stat\n  Display attributes of files and directories.\n    The stat command displays the status of a file.The information is much more when compared to ls -l. It also includes the absolute path,Number of blocks used by the file,access time, time of modification etc.,,\nwc\n  Count bytes, words, lines in a file.\ndu\n  Measure disk usage of files and directories.\nfile\n  Identify (guess) the type of a file.\ntouch\n  Change timestamps of files and directories.\nchown\n  Change owner of files and directories.\nchgrp\n  Change group ownership of files and directories.\nchmod\n  Change protection mode of files and directories.\numask\n  Set a default mode for new files and directories.\nchattr\n  Change extended attributes of files and directories.\nlsattr\n  List extended attributes of files and directories.",
+    "sources": [
+      "LINUX-Commands.xmind"
+    ],
+    "note": "Catálogo histórico do XMind (2015). Descrições originais, principalmente em inglês; ferramentas e afirmações de segurança podem não se aplicar às versões atuais."
+  },
+  {
+    "id": "76",
+    "category": "Catálogo de comandos",
+    "title": "Localização de arquivos e executáveis",
+    "description": "Comandos e descrições do mapa mental Linux, agrupados pelo assunto original.",
+    "code": "find\n  Locate files in a directory hierarchy.\nxargs\n  Process a list of located files (and much more).\nlocate\n  Create an index of files, and search the index for string.\nwhich\n  Locate executables in your search path (command).\ntype\n  Locate executables in your search path (bash built-in).\nwhereis\n  Locate executables, documentation, and source files.",
+    "sources": [
+      "LINUX-Commands.xmind"
+    ],
+    "note": "Catálogo histórico do XMind (2015). Descrições originais, principalmente em inglês; ferramentas e afirmações de segurança podem não se aplicar às versões atuais."
+  },
+  {
+    "id": "77",
+    "category": "Catálogo de comandos",
+    "title": "Manipulação de texto",
+    "description": "Comandos e descrições do mapa mental Linux, agrupados pelo assunto original.",
+    "code": "grep\n  Find lines in a file that match a regular expression.\ncut\n  Extract columns from a file.\npaste\n  Append columns.\ntr\n  Translate characters into other characters.\nsort\n  Sort lines of text by various criteria.\nuniq\n  Locate identical lines in a file.\ntee\n  Copy a file and print it on standard output, simultaneously.",
+    "sources": [
+      "LINUX-Commands.xmind"
+    ],
+    "note": "Catálogo histórico do XMind (2015). Descrições originais, principalmente em inglês; ferramentas e afirmações de segurança podem não se aplicar às versões atuais."
+  },
+  {
+    "id": "78",
+    "category": "Catálogo de comandos",
+    "title": "Compactação e empacotamento",
+    "description": "Comandos e descrições do mapa mental Linux, agrupados pelo assunto original.",
+    "code": "tar\n  Package multiple files into a single file.\ngzip\n  Compress files with GNU Zip.\ngunzip\n  Uncompress GNU Zip files.\nbzip2\n  Compress files in BZip format.\nbunzip2\n  Uncompress BZip files.\nbzcat\n  Compress/uncompress BZip files via standard input/output.\ncompress\n  Compress files with traditional Unix compression.\nuncompress\n  Uncompress files with traditional Unix compression.\nzcat\n  Compress/uncompress file via standard input/output (gzip or compress).\nzip\n  Compress files in Windows Zip format.\nunzip\n  Uncompress Windows Zip files.\nmetamail\n  Extract MIME data to files.",
+    "sources": [
+      "LINUX-Commands.xmind"
+    ],
+    "note": "Catálogo histórico do XMind (2015). Descrições originais, principalmente em inglês; ferramentas e afirmações de segurança podem não se aplicar às versões atuais."
+  },
+  {
+    "id": "79",
+    "category": "Catálogo de comandos",
+    "title": "Comparação de arquivos",
+    "description": "Comandos e descrições do mapa mental Linux, agrupados pelo assunto original.",
+    "code": "diff\n  Line-by-line comparison of two files or directories.\ncomm\n  Line-by-line comparison of two sorted files.\ncmp\n  Byte-by-byte comparison of two files.\nmd5sum\n  Compute a checksum of the given files (MD5).",
+    "sources": [
+      "LINUX-Commands.xmind"
+    ],
+    "note": "Catálogo histórico do XMind (2015). Descrições originais, principalmente em inglês; ferramentas e afirmações de segurança podem não se aplicar às versões atuais."
+  },
+  {
+    "id": "80",
+    "category": "Catálogo de comandos",
+    "title": "Impressão",
+    "description": "Comandos e descrições do mapa mental Linux, agrupados pelo assunto original.",
+    "code": "lpr\n  Print a file.\nlpq\n  View the print queue.\nlprm\n  Remove a print job from the queue.",
+    "sources": [
+      "LINUX-Commands.xmind"
+    ],
+    "note": "Catálogo histórico do XMind (2015). Descrições originais, principalmente em inglês; ferramentas e afirmações de segurança podem não se aplicar às versões atuais."
+  },
+  {
+    "id": "81",
+    "category": "Catálogo de comandos",
+    "title": "Verificação ortográfica",
+    "description": "Comandos e descrições do mapa mental Linux, agrupados pelo assunto original.",
+    "code": "look\n  Look up the spelling of a word quickly.\naspell\n  Interactive spelling checker.\nspell\n  Batch spelling checker.",
+    "sources": [
+      "LINUX-Commands.xmind"
+    ],
+    "note": "Catálogo histórico do XMind (2015). Descrições originais, principalmente em inglês; ferramentas e afirmações de segurança podem não se aplicar às versões atuais."
+  },
+  {
+    "id": "82",
+    "category": "Catálogo de comandos",
+    "title": "Discos e filesystems",
+    "description": "Comandos e descrições do mapa mental Linux, agrupados pelo assunto original.",
+    "code": "df\n  Display available space on mounted filesystems.\nmount\n  Make a disk partition accessible.\numount\n  Unmount a disk partition (make it inaccessible).\nfsck\n  Check a disk partition for errors.\nsync\n  Flush all disk caches to disk.\nlshw\ninxi\nlsblk",
+    "sources": [
+      "LINUX-Commands.xmind"
+    ],
+    "note": "Catálogo histórico do XMind (2015). Descrições originais, principalmente em inglês; ferramentas e afirmações de segurança podem não se aplicar às versões atuais."
+  },
+  {
+    "id": "83",
+    "category": "Catálogo de comandos",
+    "title": "Backup e armazenamento remoto",
+    "description": "Comandos e descrições do mapa mental Linux, agrupados pelo assunto original.",
+    "code": "dump\n  Write a disk partition to a backup medium.\nrestore\n  Restore the results of a dump.\ncdrecord\n  Burn a CD, DVD, or Blu-ray disc.\nrsync\n  Mirror a set of files onto another device or host.\nmt\n  Control a tape drive.",
+    "sources": [
+      "LINUX-Commands.xmind"
+    ],
+    "note": "Catálogo histórico do XMind (2015). Descrições originais, principalmente em inglês; ferramentas e afirmações de segurança podem não se aplicar às versões atuais."
+  },
+  {
+    "id": "84",
+    "category": "Catálogo de comandos",
+    "title": "Consulta de processos",
+    "description": "Comandos e descrições do mapa mental Linux, agrupados pelo assunto original.",
+    "code": "ps\n  List process.\nuptime\n  View the system load.\nw\n  List active processes for all users.\ntop\n  Monitor resource-intensive processes interactively.\nhtop\niotop\npowertop\ngnome-system-monitor\n  Monitor system load and processes graphically.\nxload\n  Simple, graphical monitor of system load.\nfree\n  Display free memory.\npidof\n  Command, which looks up and prints the PID of a process by its name\nnmon",
+    "sources": [
+      "LINUX-Commands.xmind"
+    ],
+    "note": "Catálogo histórico do XMind (2015). Descrições originais, principalmente em inglês; ferramentas e afirmações de segurança podem não se aplicar às versões atuais."
+  },
+  {
+    "id": "85",
+    "category": "Catálogo de comandos",
+    "title": "Acesso e monitoramento",
+    "description": "Comandos e descrições do mapa mental Linux, agrupados pelo assunto original.",
+    "code": "ssh\nmunin - monitoring",
+    "sources": [
+      "LINUX-Commands.xmind"
+    ],
+    "note": "Catálogo histórico do XMind (2015). Descrições originais, principalmente em inglês; ferramentas e afirmações de segurança podem não se aplicar às versões atuais."
+  },
+  {
+    "id": "86",
+    "category": "Catálogo de comandos",
+    "title": "Controle de processos",
+    "description": "Comandos e descrições do mapa mental Linux, agrupados pelo assunto original.",
+    "code": "kill\n  Terminate a process (or send it a signal).\nkillall\nnice\n  Invoke a program at a particular priority.\nrenice\n  Change a process’s priority as it runs.\ncpulimit",
+    "sources": [
+      "LINUX-Commands.xmind"
+    ],
+    "note": "Catálogo histórico do XMind (2015). Descrições originais, principalmente em inglês; ferramentas e afirmações de segurança podem não se aplicar às versões atuais."
+  },
+  {
+    "id": "87",
+    "category": "Catálogo de comandos",
+    "title": "Agendamento de jobs",
+    "description": "Comandos e descrições do mapa mental Linux, agrupados pelo assunto original.",
+    "code": "sleep\n  Wait a set number of seconds, doing nothing.\nwatch\n  Run a program at set intervals.\n    The watch command can be used to repeat a command at fixed intervals.the default interval is 2 second.the interval can be changed with -n option\nat\n  Schedule a job for a single, future time.\ncrontab\n  Schedule jobs for many future times.",
+    "sources": [
+      "LINUX-Commands.xmind"
+    ],
+    "note": "Catálogo histórico do XMind (2015). Descrições originais, principalmente em inglês; ferramentas e afirmações de segurança podem não se aplicar às versões atuais."
+  },
+  {
+    "id": "88",
+    "category": "Catálogo de comandos",
+    "title": "Encerramento e reinício",
+    "description": "Comandos e descrições do mapa mental Linux, agrupados pelo assunto original.",
+    "code": "shutdown\n  Halts or reboots a Linux system",
+    "sources": [
+      "LINUX-Commands.xmind"
+    ],
+    "note": "Catálogo histórico do XMind (2015). Descrições originais, principalmente em inglês; ferramentas e afirmações de segurança podem não se aplicar às versões atuais."
+  },
+  {
+    "id": "89",
+    "category": "Catálogo de comandos",
+    "title": "Usuários e ambiente",
+    "description": "Comandos e descrições do mapa mental Linux, agrupados pelo assunto original.",
+    "code": "logname\n  Print your login name.\nwhoami\n  Print your current, effective username.\nid\n  Print the user ID and group membership of a user.\nwho\n  List logged-in users, long output.\nusers\n  List logged-in users, short output.\nfinger\n  Print information about users.\nlast\n  Determine when someone last logged in.\nprintenv\n  Print your environment.",
+    "sources": [
+      "LINUX-Commands.xmind"
+    ],
+    "note": "Catálogo histórico do XMind (2015). Descrições originais, principalmente em inglês; ferramentas e afirmações de segurança podem não se aplicar às versões atuais."
+  },
+  {
+    "id": "90",
+    "category": "Catálogo de comandos",
+    "title": "Administração de contas",
+    "description": "Comandos e descrições do mapa mental Linux, agrupados pelo assunto original.",
+    "code": "useradd\n  Create an account.\nuserdel\n  Delete an account.\nusermod\n  Modify an account.\npasswd\n  Change a password.\nchfn\n  Change a user’s personal information.\nchsh\n  Change a user’s shell.",
+    "sources": [
+      "LINUX-Commands.xmind"
+    ],
+    "note": "Catálogo histórico do XMind (2015). Descrições originais, principalmente em inglês; ferramentas e afirmações de segurança podem não se aplicar às versões atuais."
+  },
+  {
+    "id": "91",
+    "category": "Catálogo de comandos",
+    "title": "Administração de grupos",
+    "description": "Comandos e descrições do mapa mental Linux, agrupados pelo assunto original.",
+    "code": "groups\n  Print the group membership of a user.\ngroupadd\n  Create a group.\ngroupdel\n  Delete a group.\ngroupmod\n  Modify a group.",
+    "sources": [
+      "LINUX-Commands.xmind"
+    ],
+    "note": "Catálogo histórico do XMind (2015). Descrições originais, principalmente em inglês; ferramentas e afirmações de segurança podem não se aplicar às versões atuais."
+  },
+  {
+    "id": "92",
+    "category": "Catálogo de comandos",
+    "title": "Informações do host",
+    "description": "Comandos e descrições do mapa mental Linux, agrupados pelo assunto original.",
+    "code": "uname\n  Print basic system information.\nhostname\n  Print the system’s hostname.\ndnsdomainname\n  Same as hostname -d.\ndomainname\n  Same as hostname -y.\nnisdomainname\n  Same as hostname -y.\nypdomainname\n  Same as hostname -y.\nip\n  Set and display network interface information.\nifconfig\n  Older command to set and display network interface information.",
+    "sources": [
+      "LINUX-Commands.xmind"
+    ],
+    "note": "Catálogo histórico do XMind (2015). Descrições originais, principalmente em inglês; ferramentas e afirmações de segurança podem não se aplicar às versões atuais."
+  },
+  {
+    "id": "93",
+    "category": "Catálogo de comandos",
+    "title": "DNS e localização de hosts",
+    "description": "Comandos e descrições do mapa mental Linux, agrupados pelo assunto original.",
+    "code": "host\n  Look up hostnames, IP addresses, and DNS info.\nwhois\n  Look up the registrants of Internet domains.\nping\n  Check if a remote host is reachable.\ntraceroute\n  View the network path to a remote host.\ndig\n  ex\n    dig <DOMINIO> +trace\ndig -t ANY <DOMINIO>",
+    "sources": [
+      "LINUX-Commands.xmind"
+    ],
+    "note": "Catálogo histórico do XMind (2015). Descrições originais, principalmente em inglês; ferramentas e afirmações de segurança podem não se aplicar às versões atuais."
+  },
+  {
+    "id": "94",
+    "category": "Catálogo de comandos",
+    "title": "Conexões de rede",
+    "description": "Comandos e descrições do mapa mental Linux, agrupados pelo assunto original.",
+    "code": "ssh\n  Securely log into a remote host, or run commands on it.\ntelnet\n  Log into a remote host (insecure!).\nscp\n  Securely copy files to/from a remote host (batch).\nsftp\n  Securely copy files to/from a remote host (interactive).\nftp\n  Copy files to/from a remote host (interactive, insecure!).",
+    "sources": [
+      "LINUX-Commands.xmind"
+    ],
+    "note": "Catálogo histórico do XMind (2015). Descrições originais, principalmente em inglês; ferramentas e afirmações de segurança podem não se aplicar às versões atuais."
+  },
+  {
+    "id": "95",
+    "category": "Catálogo de comandos",
+    "title": "Email e fila de mensagens",
+    "description": "Comandos e descrições do mapa mental Linux, agrupados pelo assunto original.",
+    "code": "thunderbird\n  Graphical mail client.\nevolution\n  Graphical mail client.\nmutt\n  Text-based mail client.\nmail\n  Minimal text-based mail client.\nmailq\n  View the outgoing mail queue on your system.",
+    "sources": [
+      "LINUX-Commands.xmind"
+    ],
+    "note": "Catálogo histórico do XMind (2015). Descrições originais, principalmente em inglês; ferramentas e afirmações de segurança podem não se aplicar às versões atuais."
+  },
+  {
+    "id": "96",
+    "category": "Catálogo de comandos",
+    "title": "Navegação e downloads",
+    "description": "Comandos e descrições do mapa mental Linux, agrupados pelo assunto original.",
+    "code": "firefox\n  Full-featured web browser.\nlynx\n  Text-only web browser.\nwget\n  Download web pages and files.",
+    "sources": [
+      "LINUX-Commands.xmind"
+    ],
+    "note": "Catálogo histórico do XMind (2015). Descrições originais, principalmente em inglês; ferramentas e afirmações de segurança podem não se aplicar às versões atuais."
+  },
+  {
+    "id": "97",
+    "category": "Catálogo de comandos",
+    "title": "Usenet",
+    "description": "Comandos e descrições do mapa mental Linux, agrupados pelo assunto original.",
+    "code": "slrn\n  Usenet newsreader",
+    "sources": [
+      "LINUX-Commands.xmind"
+    ],
+    "note": "Catálogo histórico do XMind (2015). Descrições originais, principalmente em inglês; ferramentas e afirmações de segurança podem não se aplicar às versões atuais."
+  },
+  {
+    "id": "98",
+    "category": "Catálogo de comandos",
+    "title": "Mensagens e terminais",
+    "description": "Comandos e descrições do mapa mental Linux, agrupados pelo assunto original.",
+    "code": "gaim\n  Instant messaging and IRC client.\ntalk\n  Linux/Unix chat program.\nwrite\n  Send messages to a terminal.\nmesg\n  Prohibit talk and write.\ntty\n  Print your terminal device name.",
+    "sources": [
+      "LINUX-Commands.xmind"
+    ],
+    "note": "Catálogo histórico do XMind (2015). Descrições originais, principalmente em inglês; ferramentas e afirmações de segurança podem não se aplicar às versões atuais."
+  },
+  {
+    "id": "99",
+    "category": "Catálogo de comandos",
+    "title": "Saída no terminal",
+    "description": "Comandos e descrições do mapa mental Linux, agrupados pelo assunto original.",
+    "code": "echo\n  Print simple text on standard output.\nprintf\n  Print formatted text on standard output.\nyes\n  Print repeated text on standard output.\nseq\n  Print a sequence of numbers on standard output.\nclear\n  Clear the screen or window.",
+    "sources": [
+      "LINUX-Commands.xmind"
+    ],
+    "note": "Catálogo histórico do XMind (2015). Descrições originais, principalmente em inglês; ferramentas e afirmações de segurança podem não se aplicar às versões atuais."
+  },
+  {
+    "id": "100",
+    "category": "Catálogo de comandos",
+    "title": "Cálculos",
+    "description": "Comandos e descrições do mapa mental Linux, agrupados pelo assunto original.",
+    "code": "xcalc\n  Display a graphical calculator.\nexpr\n  Evaluate simple math on the command line.\ndc\n  Text-based calculator.",
+    "sources": [
+      "LINUX-Commands.xmind"
+    ],
+    "note": "Catálogo histórico do XMind (2015). Descrições originais, principalmente em inglês; ferramentas e afirmações de segurança podem não se aplicar às versões atuais."
+  },
+  {
+    "id": "101",
+    "category": "Catálogo de comandos",
+    "title": "Datas e horários",
+    "description": "Comandos e descrições do mapa mental Linux, agrupados pelo assunto original.",
+    "code": "xclock\n  Display a graphical clock.\ncal\n  Print a calendar.\ndate\n  Print or set the date and time.\nntpdate\n  Set the system time using a remote timeserver.",
+    "sources": [
+      "LINUX-Commands.xmind"
+    ],
+    "note": "Catálogo histórico do XMind (2015). Descrições originais, principalmente em inglês; ferramentas e afirmações de segurança podem não se aplicar às versões atuais."
+  },
+  {
+    "id": "102",
+    "category": "Catálogo de comandos",
+    "title": "Imagens e interfaces gráficas",
+    "description": "Comandos e descrições do mapa mental Linux, agrupados pelo assunto original.",
+    "code": "eog\n  Display graphics files.\ngeeqie\n  Display graphics files and slideshows.\nksnapshot\n  Take a screenshot (screen capture).\ngimp\n  Edit graphics files.\ndia\n  Draw structured diagrams.\ngnuplot\n  Create graphs and plots.\nxscreensaver\n  Run a screensaver.",
+    "sources": [
+      "LINUX-Commands.xmind"
+    ],
+    "note": "Catálogo histórico do XMind (2015). Descrições originais, principalmente em inglês; ferramentas e afirmações de segurança podem não se aplicar às versões atuais."
+  },
+  {
+    "id": "103",
+    "category": "Catálogo de comandos",
+    "title": "Áudio",
+    "description": "Comandos e descrições do mapa mental Linux, agrupados pelo assunto original.",
+    "code": "amarok, rhythmbox, xmms\n  Audio file players (MP3, WAV, OGG).\ngrip\n  CD player, ripper, and MP3 encoder.\ncdparanoia\n  Rip audio from CDs to WAV files.\nlame\n  Convert from WAV to MP3.\nid3tag\n  Edit ID3 tags.\naudacity\n  Edit audio files.\nk3b\n  CD burner with graphical interface.",
+    "sources": [
+      "LINUX-Commands.xmind"
+    ],
+    "note": "Catálogo histórico do XMind (2015). Descrições originais, principalmente em inglês; ferramentas e afirmações de segurança podem não se aplicar às versões atuais."
+  },
+  {
+    "id": "104",
+    "category": "Catálogo de comandos",
+    "title": "Vídeo",
+    "description": "Comandos e descrições do mapa mental Linux, agrupados pelo assunto original.",
+    "code": "mplayer\n  Video file playback.\ngxine\n  Simple DVD player.\nkino\n  Video editor.\nHandBrake\n  Video ripper.",
+    "sources": [
+      "LINUX-Commands.xmind"
+    ],
+    "note": "Catálogo histórico do XMind (2015). Descrições originais, principalmente em inglês; ferramentas e afirmações de segurança podem não se aplicar às versões atuais."
+  },
+  {
+    "id": "105",
+    "category": "Catálogo de comandos",
+    "title": "Diagnóstico de rede",
+    "description": "Comandos e descrições do mapa mental Linux, agrupados pelo assunto original.",
+    "code": "traceroute\n  View the network path to a remote host.\nifconfig\n  Older command to set and display network interface information.\nnetstat\n  Commands\n    Aktualne polaczenia TCP w systemie. (-anu wskazuje na polaczenia UDP)\nnetstat -ant\nAktualne polaczenia wraz z numerami PID\nnetstat -tulpn\nwho\n  List logged-in users, long output.\ntcpdump\nping\n  Check if a remote host is reachable.\nifup/ifdown\nnslookup\ndig\nmtr\n  mtr combines the functionality of the traceroute and ping programs in a single network diagnostic tool\n    As mtr starts, it investigates the network connection between the host mtr runs on and HOSTNAME.  by sending packets with purposely low TTLs. It continues to send packets with low  TTL, noting the response time of the intervening routers.  This allows mtr to print the response percentage and response times of the internet route to HOSTNAME.  A sudden increase in packet loss or response time is often an indication of a bad (or simply overloaded) link. The results are usually reported as round-trip-response times in miliseconds and the percentage of packetloss.",
+    "sources": [
+      "LINUX-Commands.xmind"
+    ],
+    "note": "Catálogo histórico do XMind (2015). Descrições originais, principalmente em inglês; ferramentas e afirmações de segurança podem não se aplicar às versões atuais."
+  },
+  {
+    "id": "106",
+    "category": "Confiabilidade SRE",
+    "title": "SLI, SLO e orçamento de erro",
+    "description": "Definir confiabilidade pela experiência de quem usa o serviço.",
+    "code": "SLI = eventos bons / eventos válidos\nOrçamento de erro = eventos válidos × (1 − SLO)\n\nExemplo didático: SLO 99,9% em 30 dias\n1.000.000 requisições válidas → 1.000 falhas permitidas\n\nDisponibilidade por tempo, se esse for o SLI:\n30 dias × 0,001 = 43,2 minutos",
+    "sources": [],
+    "senior": true,
+    "platform": "UNIX / independente de plataforma",
+    "note": "Síntese técnica e exemplo didático. Validar ferramentas, permissões e versões no ambiente; critérios devem refletir o baseline e o SLO do serviço.",
+    "signals": [
+      "Sucesso funcional, latência e frescor conforme a jornada.",
+      "Separar medição por requisição de medição por tempo."
+    ],
+    "steps": [
+      "Definir numerador, denominador, exclusões e janela.",
+      "Escolher o objetivo com produto e consumidores.",
+      "Documentar resposta ao consumo do orçamento."
+    ],
+    "success": "SLI reproduzível e política acordada; médias de uptime de hosts não substituem disponibilidade do serviço.",
+    "references": [
+      {
+        "title": "Google SRE · Implementing SLOs",
+        "url": "https://sre.google/workbook/implementing-slos/"
+      },
+      {
+        "title": "Google SRE · Embracing risk",
+        "url": "https://sre.google/sre-book/embracing-risk/"
+      }
+    ]
+  },
+  {
+    "id": "107",
+    "category": "Confiabilidade SRE",
+    "title": "Burn rate e alertas acionáveis",
+    "description": "Distinguir consumo urgente do orçamento de degradação persistente.",
+    "code": "Burn rate = fração de erros / (1 − SLO)\n\nExemplo: SLO 99,9%; erros 1% → burn rate 10\nSe a taxa persistisse durante toda a janela,\no orçamento de 30 dias acabaria em cerca de 3 dias.",
+    "sources": [],
+    "senior": true,
+    "platform": "UNIX / independente de plataforma",
+    "note": "Síntese técnica e exemplo didático. Validar ferramentas, permissões e versões no ambiente; critérios devem refletir o baseline e o SLO do serviço.",
+    "signals": [
+      "Comparar janela longa com curta para confirmar persistência.",
+      "Definir page para ação imediata e ticket para investigação."
+    ],
+    "steps": [
+      "Calcular taxa para a mesma população do SLI.",
+      "Ajustar limiares ao tempo de resposta e orçamento.",
+      "Simular incidentes e verificar alertas ausentes e falsos positivos."
+    ],
+    "success": "Todo page tem responsável, ação possível e runbook; tráfego ausente não é sucesso.",
+    "references": [
+      {
+        "title": "Google SRE · Alerting on SLOs",
+        "url": "https://sre.google/workbook/alerting-on-slos/"
+      }
+    ]
+  },
+  {
+    "id": "108",
+    "category": "Observabilidade SRE",
+    "title": "Golden signals e contexto operacional",
+    "description": "Combinar impacto no serviço com diagnóstico de recursos.",
+    "code": "Dashboard mínimo\n• Latência: p50, p95 e p99; separar sucesso e erro\n• Tráfego: volume e concorrência\n• Erros: falhas funcionais e de transporte\n• Saturação: filas e limites de recursos",
+    "sources": [],
+    "senior": true,
+    "platform": "UNIX / independente de plataforma",
+    "note": "Síntese técnica e exemplo didático. Validar ferramentas, permissões e versões no ambiente; critérios devem refletir o baseline e o SLO do serviço.",
+    "signals": [
+      "Percentis mostram caudas que a média oculta.",
+      "Comparar mesmo período, escopo e carga."
+    ],
+    "steps": [
+      "Partir do sintoma percebido pelo consumidor.",
+      "Correlacionar deploy, dependência e recurso.",
+      "Registrar hipótese e evidência que a refutaria."
+    ],
+    "success": "Painel permite localizar a camada de degradação sem concluir causa apenas por correlação.",
+    "references": [
+      {
+        "title": "Google SRE · Monitoring distributed systems",
+        "url": "https://sre.google/sre-book/monitoring-distributed-systems/"
+      }
+    ]
+  },
+  {
+    "id": "109",
+    "category": "Observabilidade SRE",
+    "title": "PromQL: erro e p99 com histograma clássico",
+    "description": "Exemplos para métricas de uma aplicação instrumentada.",
+    "code": "# Nomes ilustrativos; não são métricas UNIX nativas\nsum by (service) (rate(app_requests_total{result=\"error\"}[5m]))\n/ sum by (service) (rate(app_requests_total[5m]))\n\nhistogram_quantile(0.99,\n  sum by (le, service) (\n    rate(app_request_duration_seconds_bucket[5m])\n  )\n)",
+    "sources": [],
+    "senior": true,
+    "platform": "Prometheus / aplicação instrumentada",
+    "note": "Síntese técnica e exemplo didático. Validar ferramentas, permissões e versões no ambiente; critérios devem refletir o baseline e o SLO do serviço.",
+    "signals": [
+      "Aplicar rate antes de somar contadores.",
+      "Manter le ao agregar buckets de histograma clássico."
+    ],
+    "steps": [
+      "Confirmar nome, unidade e labels reais.",
+      "Validar resets, baixo tráfego e buckets.",
+      "Tratar ausência de dados e erro de scraping separadamente."
+    ],
+    "success": "Consulta preserva escopo e unidades; p99 agregado não é média dos p99 de hosts.",
+    "references": [
+      {
+        "title": "Prometheus · Query functions",
+        "url": "https://prometheus.io/docs/prometheus/latest/querying/functions/"
+      }
+    ]
+  },
+  {
+    "id": "110",
+    "category": "Observabilidade SRE",
+    "title": "Telemetria ausente e cardinalidade",
+    "description": "Diferenciar serviço saudável de falha na observação.",
+    "code": "# Métrica genérica; adaptar job ao ambiente\nup{job=\"unix-exporter\"} == 0\nabsent_over_time(up{job=\"unix-exporter\"}[10m])",
+    "sources": [],
+    "senior": true,
+    "platform": "Prometheus",
+    "note": "Síntese técnica e exemplo didático. Validar ferramentas, permissões e versões no ambiente; critérios devem refletir o baseline e o SLO do serviço.",
+    "signals": [
+      "up=0 sinaliza scrape que falhou.",
+      "Ausência de série também pode vir de discovery ou relabeling."
+    ],
+    "steps": [
+      "Verificar exporter, scrape, discovery e ingestão.",
+      "Evitar labels com request ID, PID ou usuário sem limite.",
+      "Dimensionar retenção e séries por serviço."
+    ],
+    "success": "Falha de observação tem alerta próprio, sem transformar falta de dados em disponibilidade.",
+    "references": [
+      {
+        "title": "Prometheus · Query functions",
+        "url": "https://prometheus.io/docs/prometheus/latest/querying/functions/"
+      },
+      {
+        "title": "Google SRE · Monitoring distributed systems",
+        "url": "https://sre.google/sre-book/monitoring-distributed-systems/"
+      }
+    ]
+  },
+  {
+    "id": "111",
+    "category": "Performance UNIX",
+    "title": "Triagem por hipótese e baseline",
+    "description": "Organizar diagnóstico de lentidão sem mudanças prematuras.",
+    "code": "Perguntas iniciais\n1. Qual operação ficou lenta e desde quando?\n2. Qual o escopo: processo, host, LPAR ou dependência?\n3. O que mudou antes do sintoma?\n4. Qual recurso apresenta fila ou erro?\n5. Que evidência invalidaria a hipótese?",
+    "sources": [],
+    "senior": true,
+    "platform": "UNIX / independente de plataforma",
+    "note": "Síntese técnica e exemplo didático. Validar ferramentas, permissões e versões no ambiente; critérios devem refletir o baseline e o SLO do serviço.",
+    "signals": [
+      "Comparar uso, saturação e erros de CPU, memória, disco e rede.",
+      "Coletar amostras temporais; snapshot isolado é insuficiente."
+    ],
+    "steps": [
+      "Medir efeito no serviço.",
+      "Capturar baseline e amostras durante o evento.",
+      "Alterar uma variável e medir novamente."
+    ],
+    "success": "Evidência conecta a hipótese ao sintoma; tuning tem benefício medido e plano de retorno.",
+    "references": [
+      {
+        "title": "IBM · Performance management AIX 7.2",
+        "url": "https://www.ibm.com/docs/en/aix/7.2.0?topic=tuning-performance-management"
+      },
+      {
+        "title": "Red Hat · Ferramentas de performance RHEL 9",
+        "url": "https://docs.redhat.com/en/documentation/red_hat_enterprise_linux/9/html/monitoring_and_managing_system_status_and_performance/overview-of-performance-monitoring-options"
+      }
+    ]
+  },
+  {
+    "id": "112",
+    "category": "Performance UNIX",
+    "title": "CPU em AIX e capacidade de LPAR",
+    "description": "Distinguir CPU virtual, consumo físico e entitlement.",
+    "code": "vmstat 2 10\nlparstat 2 10\nlparstat -i",
+    "sources": [],
+    "senior": true,
+    "platform": "AIX / PowerVM",
+    "note": "Síntese técnica e exemplo didático. Validar ferramentas, permissões e versões no ambiente; critérios devem refletir o baseline e o SLO do serviço.",
+    "signals": [
+      "Interpretar physc e %entc com entitlement, capped/uncapped e pool compartilhado.",
+      "Fila runnable e tempo de CPU exigem comparação com baseline."
+    ],
+    "steps": [
+      "Correlacionar workload e janela de degradação.",
+      "Revisar configuração da LPAR antes de pedir CPU.",
+      "Consultar capacidade compartilhada com a equipe de virtualização."
+    ],
+    "success": "Capacidade e demanda explicadas com dados; %entc acima de 100 em LPAR uncapped não prova falha.",
+    "references": [
+      {
+        "title": "IBM · lparstat AIX 7.3",
+        "url": "https://www.ibm.com/docs/en/aix/7.3.0?topic=l-lparstat-command"
+      },
+      {
+        "title": "IBM · Performance management AIX 7.2",
+        "url": "https://www.ibm.com/docs/en/aix/7.2.0?topic=tuning-performance-management"
+      }
+    ]
+  },
+  {
+    "id": "113",
+    "category": "Performance UNIX",
+    "title": "Memória e paging no AIX",
+    "description": "Investigar pressão de memória além do valor de memória livre.",
+    "code": "vmstat 2 10\nsvmon -G\nlsps -a",
+    "sources": [],
+    "senior": true,
+    "platform": "AIX",
+    "note": "Síntese técnica e exemplo didático. Validar ferramentas, permissões e versões no ambiente; critérios devem refletir o baseline e o SLO do serviço.",
+    "signals": [
+      "Correlacionar paging sustentado, carga e latência.",
+      "Distinguir memória de processo, cache e uso de paging space."
+    ],
+    "steps": [
+      "Comparar consumo ao longo do tempo.",
+      "Identificar processos e workload em crescimento.",
+      "Avaliar custo da coleta; svmon pode ser mais intrusivo que vmstat."
+    ],
+    "success": "Pressão demonstrada por comportamento, não apenas por pouca memória livre.",
+    "references": [
+      {
+        "title": "IBM · svmon",
+        "url": "https://www.ibm.com/docs/en/aix/7.1.0?topic=usage-svmon-command"
+      },
+      {
+        "title": "IBM · Performance management AIX 7.2",
+        "url": "https://www.ibm.com/docs/en/aix/7.2.0?topic=tuning-performance-management"
+      }
+    ]
+  },
+  {
+    "id": "114",
+    "category": "Performance UNIX",
+    "title": "CPU e threads no Linux",
+    "description": "Distinguir consumo, espera e limitação de capacidade.",
+    "code": "vmstat 2 10\nmpstat -P ALL 2 10\npidstat -u -t 2 10",
+    "sources": [],
+    "senior": true,
+    "platform": "Linux; mpstat e pidstat requerem sysstat",
+    "note": "Síntese técnica e exemplo didático. Validar ferramentas, permissões e versões no ambiente; critérios devem refletir o baseline e o SLO do serviço.",
+    "signals": [
+      "Examinar CPU por core, processos e threads.",
+      "Load average inclui tarefas em espera ininterruptível; não é percentual de CPU."
+    ],
+    "steps": [
+      "Confirmar quantidade de CPUs e limites do workload.",
+      "Relacionar fila, CPU e latência.",
+      "Investigar contenção ou throttling quando houver limites de cgroup."
+    ],
+    "success": "Gargalo e workload identificados antes de alterar afinidade, prioridade ou capacidade.",
+    "references": [
+      {
+        "title": "Red Hat · Ferramentas de performance RHEL 9",
+        "url": "https://docs.redhat.com/en/documentation/red_hat_enterprise_linux/9/html/monitoring_and_managing_system_status_and_performance/overview-of-performance-monitoring-options"
+      }
+    ]
+  },
+  {
+    "id": "115",
+    "category": "Performance UNIX",
+    "title": "PSI e pressão no Linux",
+    "description": "Medir tempo de stall por escassez de recursos.",
+    "code": "cat /proc/pressure/cpu\ncat /proc/pressure/memory\ncat /proc/pressure/io",
+    "sources": [],
+    "senior": true,
+    "platform": "Linux com PSI disponível",
+    "note": "Síntese técnica e exemplo didático. Validar ferramentas, permissões e versões no ambiente; critérios devem refletir o baseline e o SLO do serviço.",
+    "signals": [
+      "some: pelo menos uma tarefa parada por pressão.",
+      "full: todas as tarefas não ociosas paradas simultaneamente, quando aplicável."
+    ],
+    "steps": [
+      "Verificar suporte e habilitação no kernel.",
+      "Comparar avg10/avg60/avg300 e evolução de total.",
+      "Relacionar pressão à latência e limites do workload."
+    ],
+    "success": "PSI complementa utilização; limiar depende do serviço. PSI de CPU full no nível global tem particularidades de versão.",
+    "references": [
+      {
+        "title": "Linux Kernel · PSI",
+        "url": "https://www.kernel.org/doc/html/latest/accounting/psi.html"
+      }
+    ]
+  },
+  {
+    "id": "116",
+    "category": "Performance UNIX",
+    "title": "Latência e filas de I/O",
+    "description": "Separar demanda da aplicação e comportamento do storage.",
+    "code": "# Linux / sysstat\niostat -xz 2 10\npidstat -d 2 10\n# AIX\niostat 2 10",
+    "sources": [],
+    "senior": true,
+    "platform": "Linux e AIX: opções e colunas diferentes",
+    "note": "Síntese técnica e exemplo didático. Validar ferramentas, permissões e versões no ambiente; critérios devem refletir o baseline e o SLO do serviço.",
+    "signals": [
+      "Correlacionar await, filas, throughput e tamanho das operações.",
+      "%util alto isolado não comprova saturação de storage paralelo."
+    ],
+    "steps": [
+      "Mapear filesystem → LV → dispositivo → caminho de storage.",
+      "Comparar com baseline e erros de transporte.",
+      "Correlacionar dados do host e da camada SAN."
+    ],
+    "success": "Melhoria no tempo de resposta da aplicação, não apenas em uma métrica de disco.",
+    "references": [
+      {
+        "title": "Red Hat · Ferramentas de performance RHEL 9",
+        "url": "https://docs.redhat.com/en/documentation/red_hat_enterprise_linux/9/html/monitoring_and_managing_system_status_and_performance/overview-of-performance-monitoring-options"
+      },
+      {
+        "title": "IBM · Performance management AIX 7.2",
+        "url": "https://www.ibm.com/docs/en/aix/7.2.0?topic=tuning-performance-management"
+      }
+    ]
+  },
+  {
+    "id": "117",
+    "category": "Incidentes e recuperação",
+    "title": "Resposta a incidente e comando operacional",
+    "description": "Reduzir impacto com papéis, comunicação e decisões registradas.",
+    "code": "Registro de incidente\nImpacto e escopo:\nInício observado e horário de detecção:\nCoordenador / operação / comunicação:\nHipótese atual e evidências:\nMitigação, responsável e resultado:\nPróxima atualização:",
+    "sources": [],
+    "senior": true,
+    "platform": "UNIX / independente de plataforma",
+    "note": "Síntese técnica e exemplo didático. Validar ferramentas, permissões e versões no ambiente; critérios devem refletir o baseline e o SLO do serviço.",
+    "signals": [
+      "Priorizar impacto ao consumidor.",
+      "Distinguir mitigação de correção definitiva."
+    ],
+    "steps": [
+      "Declarar incidente e atribuir papéis.",
+      "Manter linha do tempo e decisões.",
+      "Validar recuperação antes de encerrar."
+    ],
+    "success": "Serviço recuperado, comunicação concluída e ações posteriores atribuídas.",
+    "references": [
+      {
+        "title": "Google SRE · Incident response",
+        "url": "https://sre.google/workbook/incident-response/"
+      }
+    ]
+  },
+  {
+    "id": "118",
+    "category": "Incidentes e recuperação",
+    "title": "Postmortem sem culpabilização",
+    "description": "Transformar incidente em melhoria verificável.",
+    "code": "Estrutura\n• Impacto quantificado\n• Linha do tempo com timezone\n• Gatilho e fatores contribuintes\n• O que ajudou e o que atrasou\n• Detecção, prevenção e mitigação\n• Ação / responsável / prazo / evidência",
+    "sources": [],
+    "senior": true,
+    "platform": "UNIX / independente de plataforma",
+    "note": "Síntese técnica e exemplo didático. Validar ferramentas, permissões e versões no ambiente; critérios devem refletir o baseline e o SLO do serviço.",
+    "signals": [
+      "Evitar encerrar análise em “erro humano”.",
+      "Registrar condições que permitiram a falha."
+    ],
+    "steps": [
+      "Separar fatos de hipóteses.",
+      "Priorizar poucas ações que reduzam recorrência ou impacto.",
+      "Verificar conclusão e efeito das ações."
+    ],
+    "success": "Ações têm dono e resultado mensurável; documento preserva aprendizado sem expor pessoas ou ambientes.",
+    "references": [
+      {
+        "title": "Google SRE · Postmortem culture",
+        "url": "https://sre.google/workbook/postmortem-culture/"
+      }
+    ]
+  },
+  {
+    "id": "119",
+    "category": "Incidentes e recuperação",
+    "title": "Processo indisponível: evidência antes de restart",
+    "description": "Consultar unidade, logs e dependências de serviço.",
+    "code": "# Linux com systemd\nsystemctl status <UNIDADE>\njournalctl -u <UNIDADE> --since \"30 min ago\"\n# AIX / SRC\nlssrc -s <SUBSISTEMA>\nerrpt",
+    "sources": [],
+    "senior": true,
+    "platform": "Linux systemd ou AIX SRC",
+    "note": "Síntese técnica e exemplo didático. Validar ferramentas, permissões e versões no ambiente; critérios devem refletir o baseline e o SLO do serviço.",
+    "signals": [
+      "Conferir exit status, erro da aplicação e dependências.",
+      "Restart bem-sucedido não demonstra causa resolvida."
+    ],
+    "steps": [
+      "Capturar evidência relevante antes de reiniciar.",
+      "Verificar rede, storage, configuração e mudança recente.",
+      "Retestar a jornada funcional e monitorar recorrência."
+    ],
+    "success": "Serviço funcional e estável por uma janela definida; causa ainda desconhecida fica registrada.",
+    "references": [
+      {
+        "title": "Google SRE · Incident response",
+        "url": "https://sre.google/workbook/incident-response/"
+      },
+      {
+        "title": "IBM · Performance management AIX 7.2",
+        "url": "https://www.ibm.com/docs/en/aix/7.2.0?topic=tuning-performance-management"
+      }
+    ]
+  },
+  {
+    "id": "120",
+    "category": "Incidentes e recuperação",
+    "title": "RTO, RPO e teste de restore",
+    "description": "Avaliar recuperação além do status de backup.",
+    "code": "RTO: prazo alvo para recuperar o serviço\nRPO: perda de dados máxima tolerada\n\nEnsaio\n1. Selecionar ponto de recuperação\n2. Restaurar em ambiente isolado\n3. Validar dados e aplicação\n4. Medir tempo e lacuna de dados\n5. Registrar dependências e ajustes",
+    "sources": [],
+    "senior": true,
+    "platform": "UNIX / independente de plataforma",
+    "note": "Síntese técnica e exemplo didático. Validar ferramentas, permissões e versões no ambiente; critérios devem refletir o baseline e o SLO do serviço.",
+    "signals": [
+      "Backup concluído não garante restore viável.",
+      "Incluir rede, identidade, DNS, chaves e ordem de dependências."
+    ],
+    "steps": [
+      "Definir objetivos com responsáveis pelo serviço.",
+      "Ensaiar recuperação e validar integridade.",
+      "Comparar tempos reais com objetivos acordados."
+    ],
+    "success": "Restore demonstrado com dados válidos; objetivos não atendidos geram ação de engenharia.",
+    "references": [
+      {
+        "title": "Google SRE · Reliable product launches",
+        "url": "https://sre.google/sre-book/reliable-product-launches/"
+      },
+      {
+        "title": "Google SRE · Embracing risk",
+        "url": "https://sre.google/sre-book/embracing-risk/"
+      }
+    ]
+  },
+  {
+    "id": "121",
+    "category": "Incidentes e recuperação",
+    "title": "Failover, fencing e split-brain",
+    "description": "Planejar comportamento quando nós deixam de se comunicar.",
+    "code": "Checklist de desenho\n• Quem pode escrever e onde?\n• Como é definido quorum?\n• Como um nó isolado perde acesso de escrita?\n• Como detectar replicação atrasada?\n• Qual a ordem de failover e failback?",
+    "sources": [],
+    "senior": true,
+    "platform": "Conceitos de HA; checklist de engenharia, não receita de produto",
+    "note": "Síntese técnica e exemplo didático. Validar ferramentas, permissões e versões no ambiente; critérios devem refletir o baseline e o SLO do serviço.",
+    "signals": [
+      "Considerar falha de rede e storage além de parada de processo.",
+      "Operação depende do cluster e produto; não há comando universal."
+    ],
+    "steps": [
+      "Documentar estados e autoridade de escrita.",
+      "Revisar desenho e suporte da solução específica.",
+      "Ensaiar isolamento em ambiente controlado."
+    ],
+    "success": "Teste evita dois escritores e valida recuperação da aplicação; análise deve ser específica para PowerHA, DB2 HADR ou solução adotada.",
+    "references": [
+      {
+        "title": "Google SRE · Reliable product launches",
+        "url": "https://sre.google/sre-book/reliable-product-launches/"
+      }
+    ]
+  },
+  {
+    "id": "122",
+    "category": "Mudanças e automação SRE",
+    "title": "Mudança com canário e critérios de parada",
+    "description": "Limitar alcance inicial e decidir promoção com evidência.",
+    "code": "Plano de mudança\nPré-check → backup / retorno → canário\n→ validação funcional → lote seguinte\n\nRegistrar antes:\n• Limiar de regressão e janela de observação\n• Gatilho de pausa ou rollback\n• Responsável pela decisão\n• Dependências de versão e dados",
+    "sources": [],
+    "senior": true,
+    "platform": "UNIX / independente de plataforma",
+    "note": "Síntese técnica e exemplo didático. Validar ferramentas, permissões e versões no ambiente; critérios devem refletir o baseline e o SLO do serviço.",
+    "signals": [
+      "Comparar canário com grupo estável e carga equivalente.",
+      "Snapshot pode ser insuficiente para estado distribuído ou banco."
+    ],
+    "steps": [
+      "Validar compatibilidade e capacidade remanescente.",
+      "Aplicar a um subconjunto e medir.",
+      "Promover apenas após critérios acordados."
+    ],
+    "success": "Regressão interrompe expansão; retorno foi testado e preserva consistência dos dados.",
+    "references": [
+      {
+        "title": "Google SRE · Reliable product launches",
+        "url": "https://sre.google/sre-book/reliable-product-launches/"
+      }
+    ]
+  },
+  {
+    "id": "123",
+    "category": "Mudanças e automação SRE",
+    "title": "Ansible: lotes e verificação pós-mudança",
+    "description": "Exemplo de validação serial antes de ampliar uma mudança.",
+    "code": "---\n- name: Validar hosts em lotes\n  hosts: unix_targets\n  gather_facts: false\n  serial: 1\n  max_fail_percentage: 0\n  tasks:\n    - name: Consultar identificação do sistema\n      ansible.builtin.command: uname -s\n      register: sistema\n      changed_when: false\n      failed_when: sistema.rc != 0",
+    "sources": [],
+    "senior": true,
+    "platform": "Ansible; exemplo de consulta, não patching completo",
+    "note": "Síntese técnica e exemplo didático. Validar ferramentas, permissões e versões no ambiente; critérios devem refletir o baseline e o SLO do serviço.",
+    "signals": [
+      "serial limita tamanho do lote.",
+      "max_fail_percentage é avaliado por lote; o percentual deve ser excedido."
+    ],
+    "steps": [
+      "Acrescentar pré-check, mudança e teste funcional específico.",
+      "Definir critérios e política de interrupção.",
+      "Tratar erros sem mascarar falha de validação."
+    ],
+    "success": "Falha interrompe avanço conforme política; lote serial sozinho não garante zero downtime.",
+    "references": [
+      {
+        "title": "Ansible · Estratégias de execução",
+        "url": "https://docs.ansible.com/projects/ansible/latest/playbook_guide/playbooks_strategies.html"
+      },
+      {
+        "title": "Ansible · Error handling",
+        "url": "https://docs.ansible.com/projects/ansible/latest/playbook_guide/playbooks_error_handling.html"
+      }
+    ]
+  },
+  {
+    "id": "124",
+    "category": "Mudanças e automação SRE",
+    "title": "Check mode, diff e idempotência",
+    "description": "Validar automação sem confundir simulação com garantia.",
+    "code": "ansible-playbook -i <INVENTARIO> <PLAYBOOK> --syntax-check\nansible-playbook -i <INVENTARIO> <PLAYBOOK> --check\n# --diff somente em tarefas sem conteúdo sensível",
+    "sources": [],
+    "senior": true,
+    "platform": "Ansible",
+    "note": "Síntese técnica e exemplo didático. Validar ferramentas, permissões e versões no ambiente; critérios devem refletir o baseline e o SLO do serviço.",
+    "signals": [
+      "Suporte a check mode varia por módulo.",
+      "Diff pode exibir segredos e conteúdo privado."
+    ],
+    "steps": [
+      "Testar em ambiente equivalente.",
+      "Executar novamente e verificar ausência de alterações desnecessárias.",
+      "Validar funcionalidade, não apenas retorno de task."
+    ],
+    "success": "Automação converge ao estado esperado e detecta falhas; simulação não substitui teste de mudança.",
+    "references": [
+      {
+        "title": "Ansible · Check mode e diff",
+        "url": "https://docs.ansible.com/projects/ansible/latest/playbook_guide/playbooks_checkmode.html"
+      }
+    ]
+  },
+  {
+    "id": "125",
+    "category": "Mudanças e automação SRE",
+    "title": "Toil e priorização de engenharia",
+    "description": "Escolher automação pelo custo repetido e pelo risco operacional.",
+    "code": "Registro de trabalho repetitivo\nAtividade | frequência | tempo | falhas | risco\n\nEstimativa de retorno\nHoras evitadas − implementação − manutenção\n\nMedidas: intervenção manual, recorrência e tempo de recuperação",
+    "sources": [],
+    "senior": true,
+    "platform": "UNIX / independente de plataforma",
+    "note": "Síntese técnica e exemplo didático. Validar ferramentas, permissões e versões no ambiente; critérios devem refletir o baseline e o SLO do serviço.",
+    "signals": [
+      "Mapear trabalho manual, repetitivo e que cresce com escala.",
+      "Não automatizar processo sem entender exceções."
+    ],
+    "steps": [
+      "Medir recorrência e custo.",
+      "Priorizar redução de trabalho e de falhas.",
+      "Medir antes/depois e manter ownership da automação."
+    ],
+    "success": "Tempo manual ou recorrência reduzido com evidência, sem transferir fragilidade para script sem manutenção.",
+    "references": [
+      {
+        "title": "Google SRE · Eliminating toil",
+        "url": "https://sre.google/sre-book/eliminating-toil/"
+      }
+    ]
+  },
+  {
+    "id": "126",
+    "category": "Capacidade e arquitetura",
+    "title": "Capacidade, sazonalidade e margem N−1",
+    "description": "Dimensionar pelo pico e pelo cenário de falha.",
+    "code": "Exemplo didático\nDemanda de pico: 160 unidades\n4 nós com capacidade útil de 60 cada\nPerda de 1 nó: capacidade 180; margem 20\n\nRevalidar com distribuição real e dependências.",
+    "sources": [],
+    "senior": true,
+    "platform": "UNIX / independente de plataforma",
+    "note": "Síntese técnica e exemplo didático. Validar ferramentas, permissões e versões no ambiente; critérios devem refletir o baseline e o SLO do serviço.",
+    "signals": [
+      "Medir concorrência, throughput e cauda de latência.",
+      "Identificar limite do banco, storage e rede."
+    ],
+    "steps": [
+      "Testar carga representativa e picos.",
+      "Projetar crescimento e capacidade remanescente em falha.",
+      "Definir gatilho de expansão por tempo até o limite."
+    ],
+    "success": "Capacidade útil sob falha atende o objetivo do serviço; média mensal não é dimensionamento de pico.",
+    "references": [
+      {
+        "title": "Google SRE · Reliable product launches",
+        "url": "https://sre.google/sre-book/reliable-product-launches/"
+      },
+      {
+        "title": "Google SRE · Handling overload",
+        "url": "https://sre.google/sre-book/handling-overload/"
+      }
+    ]
+  },
+  {
+    "id": "127",
+    "category": "Capacidade e arquitetura",
+    "title": "Sobrecarga, timeout e retries",
+    "description": "Evitar que tentativas adicionais agravem a falha.",
+    "code": "Revisão de caminho crítico\n• Timeout por etapa e orçamento total\n• Retry apenas quando seguro e com limite\n• Backoff com jitter\n• Limites de concorrência e filas\n• Rejeição controlada e degradação funcional",
+    "sources": [],
+    "senior": true,
+    "platform": "UNIX / independente de plataforma",
+    "note": "Síntese técnica e exemplo didático. Validar ferramentas, permissões e versões no ambiente; critérios devem refletir o baseline e o SLO do serviço.",
+    "signals": [
+      "Retries em várias camadas multiplicam demanda.",
+      "Fila crescente pode elevar latência sem aumentar throughput."
+    ],
+    "steps": [
+      "Determinar operações idempotentes.",
+      "Medir carga adicional e tempo total.",
+      "Testar proteção de dependências sob sobrecarga."
+    ],
+    "success": "Falha parcial fica contida; comportamento degradado é conhecido e não produz tempestade de retries.",
+    "references": [
+      {
+        "title": "Google SRE · Handling overload",
+        "url": "https://sre.google/sre-book/handling-overload/"
+      }
+    ]
+  },
+  {
+    "id": "128",
+    "category": "Capacidade e arquitetura",
+    "title": "Limites e headroom operacional",
+    "description": "Relacionar limites de recursos ao workload.",
+    "code": "# Exemplo: limites da sessão atual, não de todo serviço\nulimit -a\n\nRevisar no serviço:\n• Descritores e conexões\n• Processos / threads\n• Filas e concorrência\n• Memória e CPU\n• Espaço e crescimento de logs",
+    "sources": [],
+    "senior": true,
+    "platform": "UNIX / independente de plataforma",
+    "note": "Síntese técnica e exemplo didático. Validar ferramentas, permissões e versões no ambiente; critérios devem refletir o baseline e o SLO do serviço.",
+    "signals": [
+      "Limite da sessão pode diferir do processo gerenciado.",
+      "Maior limite pode apenas deslocar o gargalo."
+    ],
+    "steps": [
+      "Identificar consumo e limite efetivos do serviço.",
+      "Correlacionar erro de alocação com pico.",
+      "Testar alteração com headroom e controles de carga."
+    ],
+    "success": "Ausência de falha de recurso no cenário de pico, sem saturar dependência.",
+    "references": [
+      {
+        "title": "Google SRE · Handling overload",
+        "url": "https://sre.google/sre-book/handling-overload/"
+      },
+      {
+        "title": "Red Hat · Ferramentas de performance RHEL 9",
+        "url": "https://docs.redhat.com/en/documentation/red_hat_enterprise_linux/9/html/monitoring_and_managing_system_status_and_performance/overview-of-performance-monitoring-options"
+      }
+    ]
+  },
+  {
+    "id": "129",
+    "category": "Prática sênior UNIX",
+    "title": "Runbook orientado a decisão",
+    "description": "Padronizar operação para uso durante incidentes.",
+    "code": "Modelo\nSintoma e impacto:\nPré-requisitos / plataforma / privilégios:\nConsulta e resultado esperado:\nHipótese confirmada ou refutada:\nAção e alcance:\nCondição de abortar:\nValidação / rollback / escalonamento:",
+    "sources": [],
+    "senior": true,
+    "platform": "UNIX / independente de plataforma",
+    "note": "Síntese técnica e exemplo didático. Validar ferramentas, permissões e versões no ambiente; critérios devem refletir o baseline e o SLO do serviço.",
+    "signals": [
+      "Separar consulta de mudança e ação destrutiva.",
+      "Evitar valores universais sem baseline."
+    ],
+    "steps": [
+      "Reproduzir instruções em ambiente adequado.",
+      "Incluir saídas genéricas e ramos de decisão.",
+      "Revisar após incidentes e alterações de versão."
+    ],
+    "success": "Outro operador consegue decidir e validar sem recorrer a dados privados ou ao autor.",
+    "references": [
+      {
+        "title": "Google SRE · Incident response",
+        "url": "https://sre.google/workbook/incident-response/"
+      }
+    ]
+  },
+  {
+    "id": "130",
+    "category": "Prática sênior UNIX",
+    "title": "Exercícios técnicos de diagnóstico",
+    "description": "Praticar a defesa de hipóteses e decisões de mitigação.",
+    "code": "Cenário A: p99 aumenta, CPU global parece normal.\nCenário B: backup conclui, restore excede o RTO.\nCenário C: patch passa no host, serviço fica degradado.\nCenário D: LPAR uncapped ultrapassa entitlement.\n\nPara cada um: impacto → evidência → hipótese\n→ teste → mitigação → validação → prevenção.",
+    "sources": [],
+    "senior": true,
+    "platform": "UNIX / independente de plataforma",
+    "note": "Síntese técnica e exemplo didático. Validar ferramentas, permissões e versões no ambiente; critérios devem refletir o baseline e o SLO do serviço.",
+    "signals": [
+      "Não concluir causa com uma única métrica.",
+      "Explicar escolha, risco e critério de encerramento."
+    ],
+    "steps": [
+      "Resolver com dados anonimizados ou ambiente de laboratório.",
+      "Documentar comandos, limitações e evidências.",
+      "Revisar o que faltava observar."
+    ],
+    "success": "Resposta demonstra método, comunicação e confiabilidade; exercícios não são apresentados como projetos já realizados.",
+    "references": [
+      {
+        "title": "Google SRE · Monitoring distributed systems",
+        "url": "https://sre.google/sre-book/monitoring-distributed-systems/"
+      },
+      {
+        "title": "Google SRE · Incident response",
+        "url": "https://sre.google/workbook/incident-response/"
+      },
+      {
+        "title": "IBM · lparstat AIX 7.3",
+        "url": "https://www.ibm.com/docs/en/aix/7.3.0?topic=l-lparstat-command"
+      }
+    ]
+  }
+]

@@ -1,0 +1,127 @@
+[
+  {
+    "file": "gui.txt",
+    "entries": 1,
+    "status": "Conteúdo técnico consolidado"
+  },
+  {
+    "file": "vulnerabilidades.txt",
+    "entries": 8,
+    "status": "Conteúdo técnico consolidado"
+  },
+  {
+    "file": "upg",
+    "entries": 5,
+    "status": "Conteúdo técnico consolidado"
+  },
+  {
+    "file": "alternatediskAIX.txt",
+    "entries": 1,
+    "status": "Conteúdo técnico consolidado"
+  },
+  {
+    "file": "TECHSpec.txt",
+    "entries": 3,
+    "status": "Conteúdo técnico consolidado"
+  },
+  {
+    "file": "comandos.txt",
+    "entries": 27,
+    "status": "Conteúdo técnico consolidado"
+  },
+  {
+    "file": "linux.txt",
+    "entries": 1,
+    "status": "Conteúdo técnico consolidado"
+  },
+  {
+    "file": "APARS-VARIADAS.txt",
+    "entries": 6,
+    "status": "Conteúdo técnico consolidado"
+  },
+  {
+    "file": "comandos2.txt",
+    "entries": 19,
+    "status": "Conteúdo técnico consolidado"
+  },
+  {
+    "file": "was.txt",
+    "entries": 3,
+    "status": "Conteúdo técnico consolidado"
+  },
+  {
+    "file": "zlinux.txt",
+    "entries": 1,
+    "status": "Conteúdo técnico consolidado"
+  },
+  {
+    "file": "ansible-setup-commands.txt",
+    "entries": 3,
+    "status": "Conteúdo técnico consolidado"
+  },
+  {
+    "file": "DB2_update_Java.txt",
+    "entries": 4,
+    "status": "Conteúdo técnico consolidado"
+  },
+  {
+    "file": "upgradeLinux.txt",
+    "entries": 2,
+    "status": "Conteúdo técnico consolidado"
+  },
+  {
+    "file": "troubleshootingSAP.txt",
+    "entries": 3,
+    "status": "Conteúdo técnico consolidado"
+  },
+  {
+    "file": "CheckGPFS.txt",
+    "entries": 5,
+    "status": "Conteúdo técnico consolidado"
+  },
+  {
+    "file": "python.txt",
+    "entries": 1,
+    "status": "Conteúdo técnico consolidado"
+  },
+  {
+    "file": "basico.txt",
+    "entries": 16,
+    "status": "Conteúdo técnico consolidado"
+  },
+  {
+    "file": "WASTPStxt.txt",
+    "entries": 2,
+    "status": "Conteúdo técnico consolidado"
+  },
+  {
+    "file": "TSM-Commands.txt",
+    "entries": 4,
+    "status": "Conteúdo técnico consolidado"
+  },
+  {
+    "file": "how-to-do-HC.txt",
+    "entries": 9,
+    "status": "Conteúdo técnico consolidado"
+  },
+  {
+    "file": "vcenter.txt",
+    "entries": 0,
+    "status": "Excluído: somente dados privados de acesso"
+  },
+  {
+    "file": "db2upgrade.txt",
+    "entries": 5,
+    "status": "Conteúdo técnico consolidado"
+  },
+  {
+    "file": "checklist.txt",
+    "entries": 7,
+    "status": "Conteúdo técnico consolidado"
+  },
+  {
+    "file": "LINUX-Commands.xmind",
+    "entries": 36,
+    "status": "Conteúdo técnico consolidado"
+  }
+]
